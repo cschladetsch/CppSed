@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# ============================================================
+#  rt — run all GoogleTest tests
+#
+#  Usage:  ./rt [--rebuild] [--filter <pattern>] [--repeat <N>]
+#               [--verbose]
+#
+#  --rebuild   passed straight to ./b, which wipes Bin/ and
+#              does a full reconfigure + rebuild before running
+#  --filter    run only tests matching a gtest filter pattern
+#              e.g.  ./rt --filter Integration.*
+#  --repeat N  repeat the full suite N times
+#  --verbose   print per-test timing
+# ============================================================
+set -euo pipefail
+cd "$(dirname "$0")"
+
+REBUILD=0
+FILTER=""
+REPEAT=1
+VERBOSE=0
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --rebuild)        REBUILD=1;       shift ;;
+        --filter|-f)      FILTER="$2";     shift 2 ;;
+        --repeat|-r)      REPEAT="$2";     shift 2 ;;
+        --verbose|-v)     VERBOSE=1;       shift ;;
+        *) echo "[rt] unknown argument: $1"; exit 1 ;;
+    esac
+done
+
+JOBS="$(nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 4)"
+TEST_BIN="Bin/Tests/fastsed_tests"
+
+# ── Always build (./b is fast when nothing changed) ───────────
+if [[ $REBUILD -eq 1 ]]; then
+    ./b --rebuild
+else
+    ./b
+fi
+
+# ── Run ───────────────────────────────────────────────────────
+echo ""
+echo "[rt] running tests..."
+echo ""
+
+GTEST_ARGS=()
+[[ -n "$FILTER"        ]] && GTEST_ARGS+=("--gtest_filter=${FILTER}")
+[[ "$REPEAT" -gt 1     ]] && GTEST_ARGS+=("--gtest_repeat=${REPEAT}")
+[[ "$VERBOSE" -eq 1    ]] && GTEST_ARGS+=("--gtest_print_time=1")
+
+if [[ ${#GTEST_ARGS[@]} -gt 0 || -n "$FILTER" ]]; then
+    # Run binary directly so gtest flags take effect
+    "${TEST_BIN}" "${GTEST_ARGS[@]}"
+else
+    # Run through ctest for structured output
+    cd Bin
+    ctest --output-on-failure -j"${JOBS}"
+fi
+
+echo ""
+echo "[rt] all tests passed"
