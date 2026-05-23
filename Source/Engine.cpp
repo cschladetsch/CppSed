@@ -315,7 +315,7 @@ FC Engine::run(LineSource& src) {
 
         // ── =: print line number ──────────────────────────────
         case '=':
-            out->write(std::to_string(lineno));
+            out->write_long(lineno);
             out->put('\n');
             break;
 

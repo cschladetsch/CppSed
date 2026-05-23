@@ -110,34 +110,57 @@ static bool do_subst_literal(const RE& re, const SubstOpt& s, string& ps) {
     const string& needle = re.src;
     if (needle.empty()) return false;
 
-    size_t pos = ps.find(needle);
-    if (pos == string::npos) return false;
-
     string result;
-    result.reserve(ps.size() + (repl_lit.size() > needle.size() ? ps.size() / std::max<size_t>(needle.size(), 1) : 0));
-
-    size_t prev = 0;
-    int mnum = 0;
-
-    while (pos != string::npos) {
-        ++mnum;
-        bool do_it = s.global ? (s.nth == 0 || mnum >= s.nth)
-                              : (mnum == (s.nth > 0 ? s.nth : 1));
-
-        if (do_it) {
-            result.append(ps, prev, pos - prev);
-            result.append(repl_lit);
-            prev = pos + needle.size();
-            if (!s.global) break;
-        } else {
-            result.append(ps, prev, (pos - prev) + needle.size());
-            prev = pos + needle.size();
-        }
-
-        pos = ps.find(needle, prev);
+    const size_t nlen = needle.size();
+    const size_t extra = repl_lit.size() > nlen ? repl_lit.size() - nlen : 0;
+    if (extra != 0 && s.global) {
+        result.reserve(ps.size() + (ps.size() / nlen + 1) * extra);
+    } else {
+        result.reserve(ps.size());
     }
 
-    result.append(ps, prev, string::npos);
+    const char* cur = ps.data();
+    const char* const end = cur + ps.size();
+    const char  first = needle.front();
+    const int   nth   = s.nth > 0 ? s.nth : 1;
+    int         mnum  = 0;
+    bool        hit_replacement = false;
+
+    while (cur < end) {
+        const char* hit = static_cast<const char*>(
+            std::memchr(cur, first, static_cast<size_t>(end - cur)));
+
+        while (hit && static_cast<size_t>(end - hit) >= nlen &&
+               std::memcmp(hit, needle.data(), nlen) != 0) {
+            hit = static_cast<const char*>(
+                std::memchr(hit + 1, first, static_cast<size_t>(end - (hit + 1))));
+        }
+
+        if (!hit) {
+            result.append(cur, end - cur);
+            break;
+        }
+
+        ++mnum;
+        bool do_it = s.global ? (s.nth == 0 || mnum >= s.nth)
+                               : (mnum == nth);
+
+        if (do_it) {
+            result.append(cur, hit - cur);
+            result.append(repl_lit);
+            cur = hit + nlen;
+            hit_replacement = true;
+            if (!s.global) {
+                result.append(cur, end - cur);
+                break;
+            }
+        } else {
+            result.append(cur, (hit - cur) + nlen);
+            cur = hit + nlen;
+        }
+    }
+
+    if (!hit_replacement) return false;
     ps = std::move(result);
     return true;
 }
