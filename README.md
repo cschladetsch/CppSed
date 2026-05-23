@@ -148,7 +148,9 @@ cmake --build Bin
 
 ## Tests
 
-148 GoogleTest cases across five suites:
+348 GoogleTest cases across six suites:
+
+![Test group distribution](Test/Results/test_groups.svg)
 
 | Suite | Tests | Covers |
 |---|---|---|
@@ -157,6 +159,7 @@ cmake --build Bin
 | `Linker` | 18 | Flatten, jump targets, label resolution, death tests |
 | `DoTrans` / `DoList` / `DoSubst` | 27 | `y`, `l`, `s` helpers with all flag combos |
 | `Integration` | 47 | End-to-end via `run_sed()` in `Test/Include/TestHelper.hpp` |
+| `Generated` | 200 | Parameterized regression sweep across substitution, deletion, transliteration, and line numbering |
 
 `TestHelper.hpp` redirects `g_out` to a pipe and feeds input via a
 `mkstemp` temp file, so each test is fully isolated with no global state

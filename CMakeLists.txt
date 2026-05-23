@@ -90,6 +90,7 @@ if(BUILD_TESTS)
         ${DIR_TEST_SRC}/TestLinker.cpp
         ${DIR_TEST_SRC}/TestEngineHelpers.cpp
         ${DIR_TEST_SRC}/TestIntegration.cpp
+        ${DIR_TEST_SRC}/TestIntegrationGenerated.cpp
     )
     target_include_directories(fastsed_tests PRIVATE
         ${DIR_TEST_INC}   # TestHelper.hpp

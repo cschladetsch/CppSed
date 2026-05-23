@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="340" viewBox="0 0 920 340" role="img" aria-labelledby="title desc">
+  <title id="title">fastsed test group distribution</title>
+  <desc id="desc">Bar chart showing grouped test counts in the fastsed test suite.</desc>
+  <rect width="920" height="340" fill="#0f172a"/>
+  <text x="32" y="42" fill="#f8fafc" font-family="DejaVu Sans, Arial, sans-serif" font-size="28" font-weight="700">fastsed test groups</text>
+  <text x="32" y="70" fill="#cbd5e1" font-family="DejaVu Sans, Arial, sans-serif" font-size="16">348 tests total, grouped for readability in the README</text>
+
+  <line x1="32" y1="266" x2="888" y2="266" stroke="#334155" stroke-width="2"/>
+
+  <g font-family="DejaVu Sans, Arial, sans-serif" font-size="13" fill="#e2e8f0">
+    <g transform="translate(48,0)">
+      <rect x="0" y="249" width="96" height="17" rx="6" fill="#38bdf8"/>
+      <text x="48" y="282" text-anchor="middle">Parse/Apply</text>
+      <text x="48" y="241" text-anchor="middle" font-size="12" fill="#94a3b8">18</text>
+    </g>
+    <g transform="translate(182,0)">
+      <rect x="0" y="228" width="96" height="38" rx="6" fill="#22c55e"/>
+      <text x="48" y="282" text-anchor="middle">Parser</text>
+      <text x="48" y="220" text-anchor="middle" font-size="12" fill="#94a3b8">38</text>
+    </g>
+    <g transform="translate(316,0)">
+      <rect x="0" y="249" width="96" height="17" rx="6" fill="#f59e0b"/>
+      <text x="48" y="282" text-anchor="middle">Linker</text>
+      <text x="48" y="241" text-anchor="middle" font-size="12" fill="#94a3b8">18</text>
+    </g>
+    <g transform="translate(450,0)">
+      <rect x="0" y="239" width="96" height="27" rx="6" fill="#a78bfa"/>
+      <text x="48" y="282" text-anchor="middle">Do*/Helpers</text>
+      <text x="48" y="231" text-anchor="middle" font-size="12" fill="#94a3b8">27</text>
+    </g>
+    <g transform="translate(584,0)">
+      <rect x="0" y="219" width="96" height="47" rx="6" fill="#fb7185"/>
+      <text x="48" y="282" text-anchor="middle">Integration</text>
+      <text x="48" y="211" text-anchor="middle" font-size="12" fill="#94a3b8">47</text>
+    </g>
+    <g transform="translate(718,0)">
+      <rect x="0" y="76" width="96" height="190" rx="6" fill="#f97316"/>
+      <text x="48" y="282" text-anchor="middle">Generated</text>
+      <text x="48" y="68" text-anchor="middle" font-size="12" fill="#94a3b8">200</text>
+    </g>
+  </g>
+</svg>
