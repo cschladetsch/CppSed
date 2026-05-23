@@ -108,7 +108,13 @@ if(BUILD_TESTS)
 endif()
 
 # ── Install ───────────────────────────────────────────────────
-install(TARGETS fastsed RUNTIME DESTINATION bin)
+install(PROGRAMS $<TARGET_FILE:fastsed>
+    DESTINATION bin
+    RENAME csed
+)
+install(FILES ${CMAKE_SOURCE_DIR}/Man/csed.1
+    DESTINATION share/man/man1
+)
 
 # ── Summary ───────────────────────────────────────────────────
 message(STATUS "  Build type : ${CMAKE_BUILD_TYPE}")

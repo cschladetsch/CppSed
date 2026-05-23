@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="968" viewBox="0 0 1640 968">
+<rect width="100%" height="100%" fill="#f4f1ea"/>
+<rect x="28" y="24" width="1584" height="84" rx="18" fill="#1f2933"/>
+<text x="56" y="60" fill="#f8fafc" font-family="DejaVu Sans, Arial, sans-serif" font-size="34" font-weight="700">fastsed vs GNU sed</text>
+<text x="56" y="92" fill="#cbd5e1" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">Average wall-clock time across benchmark cases. Ratio is fastsed / sed.</text>
+<rect x="36" y="132" width="1568" height="38" rx="10" fill="#d9e2ec"/>
+<text x="52" y="157" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">Benchmark</text>
+<text x="420" y="157" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">fastsed avg/best</text>
+<text x="620" y="157" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">GNU sed avg/best</text>
+<text x="810" y="157" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">Ratio</text>
+<text x="1030" y="157" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">Comparison</text>
+<rect x="36" y="146" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="174" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">global-substitute</text>
+<text x="420" y="174" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0527s / 0.0469s</text>
+<text x="620" y="174" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0527s / 0.0494s</text>
+<text x="810" y="174" fill="#9a7d0a" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">1.001x</text>
+<rect x="1030" y="158" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="158" width="280.00" height="22" rx="11" fill="#9a7d0a"/>
+<text x="1346" y="174" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">1.00x slower</text>
+<rect x="36" y="198" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="226" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">extended-capture</text>
+<text x="420" y="226" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.4348s / 0.3994s</text>
+<text x="620" y="226" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.9708s / 0.9002s</text>
+<text x="810" y="226" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.448x</text>
+<rect x="1030" y="210" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="210" width="125.30" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="226" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">2.23x faster</text>
+<rect x="36" y="250" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="278" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">address-delete</text>
+<text x="420" y="278" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0334s / 0.0312s</text>
+<text x="620" y="278" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0523s / 0.0479s</text>
+<text x="810" y="278" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.639x</text>
+<rect x="1030" y="262" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="262" width="178.83" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="278" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">1.56x faster</text>
+<rect x="36" y="302" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="330" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">delete-comments</text>
+<text x="420" y="330" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0226s / 0.0208s</text>
+<text x="620" y="330" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0281s / 0.0255s</text>
+<text x="810" y="330" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.804x</text>
+<rect x="1030" y="314" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="314" width="225.04" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="330" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">1.24x faster</text>
+<rect x="36" y="354" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="382" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">transliterate-upper</text>
+<text x="420" y="382" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0308s / 0.0288s</text>
+<text x="620" y="382" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">1.8322s / 1.7025s</text>
+<text x="810" y="382" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.017x</text>
+<rect x="1030" y="366" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="366" width="8.00" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="382" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">59.42x faster</text>
+<rect x="36" y="406" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="434" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">nth-global</text>
+<text x="420" y="434" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0478s / 0.0412s</text>
+<text x="620" y="434" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.1947s / 0.1833s</text>
+<text x="810" y="434" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.246x</text>
+<rect x="1030" y="418" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="418" width="68.67" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="434" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">4.07x faster</text>
+<rect x="36" y="458" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="486" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">compress-spaces</text>
+<text x="420" y="486" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.1094s / 0.0940s</text>
+<text x="620" y="486" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.2873s / 0.2691s</text>
+<text x="810" y="486" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.381x</text>
+<rect x="1030" y="470" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="470" width="106.51" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="486" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">2.63x faster</text>
+<rect x="36" y="510" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="538" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">strip-trailing</text>
+<text x="420" y="538" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.1929s / 0.1800s</text>
+<text x="620" y="538" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.5229s / 0.4986s</text>
+<text x="810" y="538" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.369x</text>
+<rect x="1030" y="522" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="522" width="103.21" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="538" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">2.71x faster</text>
+<rect x="36" y="562" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="590" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">blank-delete</text>
+<text x="420" y="590" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0121s / 0.0109s</text>
+<text x="620" y="590" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0247s / 0.0215s</text>
+<text x="810" y="590" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.492x</text>
+<rect x="1030" y="574" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="574" width="137.64" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="590" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">2.03x faster</text>
+<rect x="36" y="614" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="642" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">csv-reorder</text>
+<text x="420" y="642" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.6471s / 0.5837s</text>
+<text x="620" y="642" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">1.1053s / 1.0247s</text>
+<text x="810" y="642" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.585x</text>
+<rect x="1030" y="626" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="626" width="163.76" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="642" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">1.71x faster</text>
+<rect x="36" y="666" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="694" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">path-rewrite</text>
+<text x="420" y="694" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0260s / 0.0237s</text>
+<text x="620" y="694" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0802s / 0.0746s</text>
+<text x="810" y="694" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.324x</text>
+<rect x="1030" y="678" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="678" width="90.69" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="694" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">3.08x faster</text>
+<rect x="36" y="718" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="746" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">step-delete</text>
+<text x="420" y="746" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0182s / 0.0158s</text>
+<text x="620" y="746" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0199s / 0.0165s</text>
+<text x="810" y="746" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.914x</text>
+<rect x="1030" y="730" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="730" width="255.75" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="746" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">1.09x faster</text>
+<rect x="36" y="770" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="798" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">email-redact</text>
+<text x="420" y="798" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.2128s / 0.1769s</text>
+<text x="620" y="798" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.9217s / 0.8619s</text>
+<text x="810" y="798" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.231x</text>
+<rect x="1030" y="782" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="782" width="64.58" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="798" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">4.33x faster</text>
+<rect x="36" y="822" width="1568" height="48" rx="8" fill="#f8f6f1"/>
+<text x="52" y="850" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">error-prefix</text>
+<text x="420" y="850" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0332s / 0.0308s</text>
+<text x="620" y="850" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.0522s / 0.0465s</text>
+<text x="810" y="850" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.636x</text>
+<rect x="1030" y="834" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="834" width="178.03" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="850" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">1.57x faster</text>
+<rect x="36" y="874" width="1568" height="48" rx="8" fill="#fffdf8"/>
+<text x="52" y="902" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">status-rewrite</text>
+<text x="420" y="902" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.1747s / 0.1582s</text>
+<text x="620" y="902" fill="#102a43" font-family="DejaVu Sans, Arial, sans-serif" font-size="18">0.6419s / 0.5843s</text>
+<text x="810" y="902" fill="#1f9d55" font-family="DejaVu Sans, Arial, sans-serif" font-size="18" font-weight="700">0.272x</text>
+<rect x="1030" y="886" width="300" height="22" rx="11" fill="#e5e7eb"/>
+<rect x="1030" y="886" width="76.11" height="22" rx="11" fill="#1f9d55"/>
+<text x="1346" y="902" fill="#334e68" font-family="DejaVu Sans, Arial, sans-serif" font-size="17">3.68x faster</text>
+<text x="40" y="950" fill="#52606d" font-family="DejaVu Sans, Arial, sans-serif" font-size="16">Green rows favor fastsed. Red rows favor GNU sed.</text>
+</svg>

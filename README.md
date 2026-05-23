@@ -12,6 +12,9 @@ replacements, and `--sandbox` mode.
 fastsed/
   Include/fastsed/     Production headers (one per module)
   Source/              Production sources + Main.cpp
+  Benchmark/
+    Scripts/           sed programs used by the benchmark harness
+    run.sh             compares Bin/fastsed against system sed
   Test/
     Include/           Test-only headers (TestHelper.hpp)
     Source/            GoogleTest suites (one per module + integration)
@@ -30,13 +33,70 @@ fastsed/
 ```bash
 ./b          # configure + build (Release)
 ./b Debug    # debug build
+./install.sh --prefix "$HOME/.local"
 
 ./rt         # build then run all 148 tests
 ./rt --rebuild           # wipe Bin/, full rebuild, then run tests
 ./rt --filter Integration # run only tests matching a pattern
 ./rt --repeat 5          # run the suite 5 times
 ./rt --verbose           # print per-test timing
+
+./Benchmark/run.sh       # compare fastsed against /usr/bin/sed
+./Benchmark/run.sh --runs 10 --warmup 3
+./Benchmark/run.sh --png-out /tmp/fastsed-bench.png
 ```
+
+Installation installs the executable as `csed` and the manual page as `csed(1)`.
+
+## Benchmarks
+
+Latest generated comparison image:
+
+![fastsed benchmark comparison](Benchmark/Results/latest_results.png)
+
+Regenerate it with:
+
+```bash
+./Benchmark/run.sh --runs 10 --warmup 3
+```
+
+## Examples
+
+```bash
+# Basic substitution
+echo 'alpha beta' | ./Bin/fastsed 's/beta/gamma/'
+
+# Print only matching lines
+./Bin/fastsed -n '/error/p' app.log
+
+# Edit a file in place and keep a backup
+./Bin/fastsed -i.bak 's/localhost/db.internal/g' config.ini
+
+# Use extended regex syntax
+printf 'cat\ncot\ncut\n' | ./Bin/fastsed -E '/c(a|o)t/p'
+
+# Apply multiple commands
+printf 'a\nb\nc\n' | ./Bin/fastsed -e '1d' -e '$a done'
+
+# Run a script from a file
+./Bin/fastsed -f scripts/cleanup.sed input.txt
+
+# Replace only every second match on each line
+echo 'one two two two' | ./Bin/fastsed 's/two/TWO/2g'
+
+# Step addresses (GNU extension): print every third line starting at line 2
+seq 10 | ./Bin/fastsed -n '2~3p'
+
+# Treat NUL as the line delimiter
+printf 'a\0b\0c\0' | ./Bin/fastsed -z 's/b/B/'
+
+# Sandbox mode disables commands that touch the shell or filesystem
+./Bin/fastsed --sandbox -f script.sed input.txt
+```
+
+Notes:
+`--sandbox` rejects `e`, `r`, `R`, `w`, and `W` commands.
+`-s` processes each input file as its own stream, while plain multi-file input is treated as one continuous stream.
 
 ## Architecture
 

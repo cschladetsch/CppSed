@@ -14,6 +14,9 @@ struct RE {
     regex_t r{};
     bool    ok  = false;
     string  src; // original pattern (for error messages)
+    bool    literal = false;
+    bool    icase   = false;
+    bool    exact_empty = false;
 
     RE() = default;
     ~RE();
@@ -31,6 +34,8 @@ struct RE {
               int flags = 0) const noexcept;
 
     bool test(const char* s) const noexcept;
+
+    bool is_literal() const noexcept { return literal; }
 };
 
 } // namespace fastsed

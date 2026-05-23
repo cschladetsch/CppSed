@@ -1,0 +1,2 @@
+"/usr/bin/llvm-ar-18" cr libfastsed_core.a CMakeFiles/fastsed_core.dir/Source/Common.cpp.o CMakeFiles/fastsed_core.dir/Source/Regex.cpp.o CMakeFiles/fastsed_core.dir/Source/Replacement.cpp.o CMakeFiles/fastsed_core.dir/Source/Parser.cpp.o CMakeFiles/fastsed_core.dir/Source/Linker.cpp.o CMakeFiles/fastsed_core.dir/Source/EngineHelpers.cpp.o CMakeFiles/fastsed_core.dir/Source/Engine.cpp.o CMakeFiles/fastsed_core.dir/Source/LineSource.cpp.o CMakeFiles/fastsed_core.dir/Source/Options.cpp.o
+"/usr/bin/llvm-ranlib-18" libfastsed_core.a

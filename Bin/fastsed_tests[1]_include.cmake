@@ -1,0 +1,5 @@
+if(EXISTS "/home/christian/local/repos/CppSed/Bin/fastsed_tests[1]_tests.cmake")
+  include("/home/christian/local/repos/CppSed/Bin/fastsed_tests[1]_tests.cmake")
+else()
+  add_test(fastsed_tests_NOT_BUILT fastsed_tests_NOT_BUILT)
+endif()

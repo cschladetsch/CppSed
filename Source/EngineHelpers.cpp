@@ -87,12 +87,71 @@ void do_trans(const string ytbl[2], string& ps) {
 // ── do_subst ─────────────────────────────────────────────────
 static constexpr int NMATCH = 10;
 
+static bool repl_is_plain_literal(const ReplVec& rv, string_view& lit) {
+    if (rv.size() != 1 || rv[0].k != RTK::Lit) return false;
+    lit = rv[0].lit;
+    return true;
+}
+
+static bool do_subst_prefix(const SubstOpt& s, string& ps) {
+    string_view lit;
+    if (!s.re || s.re->src != "^" || s.global || s.nth > 1 || !repl_is_plain_literal(s.repl, lit))
+        return false;
+    ps.insert(0, lit);
+    return true;
+}
+
+static bool do_subst_literal(const RE& re, const SubstOpt& s, string& ps) {
+    if (!re.is_literal() || s.icase) return false;
+
+    string_view repl_lit;
+    if (!repl_is_plain_literal(s.repl, repl_lit)) return false;
+
+    const string& needle = re.src;
+    if (needle.empty()) return false;
+
+    size_t pos = ps.find(needle);
+    if (pos == string::npos) return false;
+
+    string result;
+    result.reserve(ps.size() + (repl_lit.size() > needle.size() ? ps.size() / std::max<size_t>(needle.size(), 1) : 0));
+
+    size_t prev = 0;
+    int mnum = 0;
+
+    while (pos != string::npos) {
+        ++mnum;
+        bool do_it = s.global ? (s.nth == 0 || mnum >= s.nth)
+                              : (mnum == (s.nth > 0 ? s.nth : 1));
+
+        if (do_it) {
+            result.append(ps, prev, pos - prev);
+            result.append(repl_lit);
+            prev = pos + needle.size();
+            if (!s.global) break;
+        } else {
+            result.append(ps, prev, (pos - prev) + needle.size());
+            prev = pos + needle.size();
+        }
+
+        pos = ps.find(needle, prev);
+    }
+
+    result.append(ps, prev, string::npos);
+    ps = std::move(result);
+    return true;
+}
+
 bool do_subst(const SubstOpt& s, string& ps, const shared_ptr<RE>& last_re) {
     const RE* re = (s.re && s.re->ok) ? s.re.get() : last_re.get();
     if (!re || !re->ok) die("no previous regex");
 
+    if (do_subst_prefix(s, ps)) return true;
+    if (do_subst_literal(*re, s, ps)) return true;
+
     regmatch_t  pm[NMATCH];
     string      result;
+    result.reserve(ps.size() + 32);
     const char* p       = ps.c_str();
     bool        changed = false;
     int         mnum    = 0;

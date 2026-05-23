@@ -1,0 +1,98 @@
+.TH CSED 1 "May 2026" "csed" "User Commands"
+.SH NAME
+csed \- fast sed-compatible stream editor
+.SH SYNOPSIS
+.B csed
+[\fIOPTION\fR]... \fISCRIPT\fR [\fIFILE\fR]...
+.br
+.B csed
+[\fIOPTION\fR]... \fB-e\fR \fISCRIPT\fR... [\fIFILE\fR]...
+.br
+.B csed
+[\fIOPTION\fR]... \fB-f\fR \fISCRIPTFILE\fR... [\fIFILE\fR]...
+.SH DESCRIPTION
+.B csed
+is a fast, sed-compatible stream editor implemented in C++23.
+It supports the POSIX sed command set together with several GNU sed
+extensions, including
+.BR e ,
+.BR F ,
+.BR Q ,
+.BR R ,
+.BR T ,
+.BR W ,
+.BR z ,
+step addresses of the form
+.BR first~step ,
+and replacement escapes such as
+.BR \eL ,
+.BR \eU ,
+.BR \el ,
+.BR \eu ,
+and
+.BR \eE .
+.SH OPTIONS
+.TP
+.BI \-e " script" ", " \-\-expression " script"
+Add an inline script.
+.TP
+.BI \-f " scriptfile" ", " \-\-file " scriptfile"
+Read commands from a script file.
+.TP
+.BR \-n ", " \-\-quiet ", " \-\-silent
+Suppress default printing of pattern space.
+.TP
+.BR \-E ", " \-r ", " \-\-regexp\-extended
+Use extended regular expressions.
+.TP
+.BR \-i [ SUFFIX ]
+Edit files in place. If
+.I SUFFIX
+is provided, keep a backup with that suffix.
+.TP
+.BR \-s ", " \-\-separate
+Treat input files as separate streams.
+.TP
+.BR \-z ", " \-\-null\-data
+Use NUL as the line delimiter.
+.TP
+.BR \-\-sandbox
+Disable commands that touch the shell or filesystem:
+.BR e ,
+.BR r ,
+.BR R ,
+.BR w ,
+and
+.BR W .
+.TP
+.BR \-\-help
+Show usage information and exit.
+.SH EXAMPLES
+.TP
+Replace text in stdin:
+.B echo 'alpha beta' | csed 's/beta/gamma/'
+.TP
+Print only matching lines:
+.B csed \-n '/error/p' app.log
+.TP
+Edit a file in place and keep a backup:
+.B csed \-i.bak 's/localhost/db.internal/g' config.ini
+.TP
+Use extended regex syntax:
+.B printf 'cat\en cot\en cut\en' | csed \-E '/c(a|o)t/p'
+.SH FILES
+.TP
+.I /usr/local/bin/csed
+Default installed executable location.
+.TP
+.I /usr/local/share/man/man1/csed.1
+Default installed manual page location.
+.SH EXIT STATUS
+Returns 0 on success. Non-zero status is returned on parse errors,
+I/O failures, regex compilation failures, or explicit
+.B q
+/
+.B Q
+exit-code requests in the script.
+.SH SEE ALSO
+.BR sed (1)
