@@ -4,7 +4,7 @@
 #
 #  Usage:  ./b [--rebuild] [--prefix DIR] [Release|Debug]
 #
-#  --rebuild   wipe Bin/ (intermediate + binaries) and
+#  --rebuild   wipe the selected build dir (intermediate + binaries) and
 #              reconfigure + rebuild from scratch.
 #              ./rt passes this flag through when invoked
 #              as:  ./rt --rebuild
@@ -12,8 +12,8 @@
 #  --no-install skip the install step; only configure + build
 #
 #  Outputs:
-#    Bin/fastsed                    main binary
-#    Bin/Tests/fastsed_tests        test binary
+#    <build>/fastsed                main binary
+#    <build>/Tests/fastsed_tests    test binary
 #    <prefix>/bin/fsed              installed executable
 #    <prefix>/share/man/man1/fsed.1 installed man page
 # ============================================================
@@ -33,6 +33,20 @@ if [[ -z "${PREFIX:-}" ]]; then
     fi
 fi
 GTEST_DIR="${GTEST_DIR:-$HOME/External/googletest}"
+
+choose_build_dir() {
+    if [[ -n "${FASTSED_BUILD_DIR:-}" ]]; then
+        printf '%s' "${FASTSED_BUILD_DIR}"
+        return
+    fi
+    if [[ -d Bin && -w Bin ]]; then
+        printf '%s' Bin
+        return
+    fi
+    printf '%s' .fastsed-build
+}
+
+BUILD_DIR="$(choose_build_dir)"
 
 case "${COMPILER_FAMILY}" in
     clang)
@@ -82,29 +96,31 @@ while [[ $# -gt 0 ]]; do
 done
 
 JOBS="$(nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 4)"
+TEST_BIN="${BUILD_DIR}/Tests/fastsed_tests"
+MAIN_BIN="${BUILD_DIR}/fastsed"
 
 # ── Wipe on --rebuild ─────────────────────────────────────────
 if [[ $REBUILD -eq 1 ]]; then
-    echo "[b] --rebuild: removing Bin/"
-    rm -rf Bin
+    echo "[b] --rebuild: removing ${BUILD_DIR}/"
+    rm -rf "${BUILD_DIR}"
 fi
 
 # ── Wipe if cached compiler differs ───────────────────────────
-if [[ -f Bin/CMakeCache.txt ]]; then
-    cached_cxx="$(sed -n 's/^CMAKE_CXX_COMPILER:FILEPATH=//p' Bin/CMakeCache.txt | head -n 1)"
+if [[ -f "${BUILD_DIR}/CMakeCache.txt" ]]; then
+    cached_cxx="$(sed -n 's/^CMAKE_CXX_COMPILER:FILEPATH=//p' "${BUILD_DIR}/CMakeCache.txt" | head -n 1)"
     if [[ -n "${cached_cxx}" && "${cached_cxx}" != "${CXX_BIN}" ]]; then
         echo "[b] compiler changed: ${cached_cxx} -> ${CXX_BIN}"
-        echo "[b] removing Bin/ for a clean reconfigure"
-        rm -rf Bin
+        echo "[b] removing ${BUILD_DIR}/ for a clean reconfigure"
+        rm -rf "${BUILD_DIR}"
     fi
 fi
 
-if [[ -f Bin/CMakeCache.txt ]]; then
-    cached_gtest="$(sed -n 's/^DIR_GTEST:PATH=//p' Bin/CMakeCache.txt | head -n 1)"
+if [[ -f "${BUILD_DIR}/CMakeCache.txt" ]]; then
+    cached_gtest="$(sed -n 's/^DIR_GTEST:PATH=//p' "${BUILD_DIR}/CMakeCache.txt" | head -n 1)"
     if [[ -n "${cached_gtest}" && "${cached_gtest}" != "${GTEST_DIR}" ]]; then
         echo "[b] gtest path changed: ${cached_gtest} -> ${GTEST_DIR}"
-        echo "[b] removing Bin/ for a clean reconfigure"
-        rm -rf Bin
+        echo "[b] removing ${BUILD_DIR}/ for a clean reconfigure"
+        rm -rf "${BUILD_DIR}"
     fi
 fi
 
@@ -118,8 +134,8 @@ if [[ ! -f "${GTEST_DIR}/CMakeLists.txt" ]]; then
 fi
 
 # ── Configure ─────────────────────────────────────────────────
-echo "[b] configuring (${BUILD_TYPE})..."
-cmake -B Bin \
+echo "[b] configuring (${BUILD_TYPE}) in ${BUILD_DIR}/..."
+cmake -B "${BUILD_DIR}" \
     -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
     -DCMAKE_C_COMPILER="${CC_BIN}" \
     -DCMAKE_CXX_COMPILER="${CXX_BIN}" \
@@ -131,20 +147,20 @@ cmake -B Bin \
 
 # ── Build ─────────────────────────────────────────────────────
 echo "[b] building with ${JOBS} jobs..."
-cmake --build Bin -j"${JOBS}"
+cmake --build "${BUILD_DIR}" -j"${JOBS}"
 
 if [[ "$INSTALL" -eq 1 ]]; then
     # ── Install ───────────────────────────────────────────────────
     echo "[b] installing to ${PREFIX}..."
-    cmake --install Bin --prefix "${PREFIX}"
+    cmake --install "${BUILD_DIR}" --prefix "${PREFIX}"
 fi
 
 echo "[b] done"
 echo "[b]   compiler: ${CXX_BIN}"
 echo "[b]   ipo: ${IPO_FLAG}"
 echo "[b]   gtest: ${GTEST_DIR}"
-echo "[b]   Bin/fastsed"
-echo "[b]   Bin/Tests/fastsed_tests"
+echo "[b]   ${MAIN_BIN}"
+echo "[b]   ${TEST_BIN}"
 if [[ "$INSTALL" -eq 1 ]]; then
     echo "[b]   ${PREFIX}/bin/fsed"
     echo "[b]   ${PREFIX}/share/man/man1/fsed.1"

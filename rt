@@ -5,7 +5,7 @@
 #  Usage:  ./rt [--rebuild] [--filter <pattern>] [--repeat <N>]
 #               [--verbose]
 #
-#  --rebuild   passed straight to ./b, which wipes Bin/ and
+#  --rebuild   passed straight to ./b, which wipes the selected build dir and
 #              does a full reconfigure + rebuild before running
 #  --filter    run only tests matching a gtest filter pattern
 #              e.g.  ./rt --filter Integration.*
@@ -20,6 +20,18 @@ FILTER=""
 REPEAT=1
 VERBOSE=0
 
+choose_build_dir() {
+    if [[ -n "${FASTSED_BUILD_DIR:-}" ]]; then
+        printf '%s' "${FASTSED_BUILD_DIR}"
+        return
+    fi
+    if [[ -d Bin && -w Bin ]]; then
+        printf '%s' Bin
+        return
+    fi
+    printf '%s' .fastsed-build
+}
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --rebuild)        REBUILD=1;       shift ;;
@@ -31,7 +43,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 JOBS="$(nproc 2>/dev/null || sysctl -n hw.logicalcpu 2>/dev/null || echo 4)"
-TEST_BIN="Bin/Tests/fastsed_tests"
+BUILD_DIR="$(choose_build_dir)"
+TEST_BIN="${BUILD_DIR}/Tests/fastsed_tests"
 
 # ── Always build (./b is fast when nothing changed) ───────────
 if [[ $REBUILD -eq 1 ]]; then
@@ -55,7 +68,7 @@ if [[ ${#GTEST_ARGS[@]} -gt 0 || -n "$FILTER" ]]; then
     "${TEST_BIN}" "${GTEST_ARGS[@]}"
 else
     # Run through ctest for structured output
-    cd Bin
+    cd "${BUILD_DIR}"
     ctest --output-on-failure -j"${JOBS}"
 fi
 

@@ -14,12 +14,12 @@ fastsed/
   Source/              Production sources + Main.cpp
   Benchmark/
     Scripts/           sed programs used by the benchmark harness
-    run.sh             compares Bin/fastsed against system sed
+    run.sh             compares the selected build output against system sed
   Test/
     Include/           Test-only headers (TestHelper.hpp)
     Source/            GoogleTest suites (one per module + integration)
   ~/External/googletest/ GoogleTest checkout used by the build
-  Bin/                 All build artefacts (CMake intermediate + binaries)
+  Bin/ or .fastsed-build/  Build artefacts (CMake intermediate + binaries)
     fastsed            Main binary
     Tests/
       fastsed_tests    Test binary
@@ -36,7 +36,7 @@ fastsed/
 ./install.sh --prefix "$HOME/.local"
 
 ./rt         # build then run all 148 tests
-./rt --rebuild           # wipe Bin/, full rebuild, then run tests
+./rt --rebuild           # wipe the selected build dir, full rebuild, then run tests
 ./rt --filter Integration # run only tests matching a pattern
 ./rt --repeat 5          # run the suite 5 times
 ./rt --verbose           # print per-test timing
@@ -49,6 +49,8 @@ fastsed/
 Installation installs the executable as `fsed` and the manual page as `fsed(1)`.
 By default it installs to `~/.local` for normal users and `/usr/local` for
 root, unless `--prefix` is set explicitly.
+If `Bin/` is not writable, the build scripts fall back to `.fastsed-build/`
+automatically.
 The build expects GoogleTest at `~/External/googletest` by default and will clone it there on first use.
 
 ## Benchmarks

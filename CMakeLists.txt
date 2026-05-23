@@ -39,8 +39,8 @@ set(DIR_INC       ${CMAKE_SOURCE_DIR}/Include)
 set(DIR_SRC       ${CMAKE_SOURCE_DIR}/Source)
 set(DIR_TEST_INC  ${CMAKE_SOURCE_DIR}/Test/Include)
 set(DIR_TEST_SRC  ${CMAKE_SOURCE_DIR}/Test/Source)
-set(DIR_BIN       ${CMAKE_SOURCE_DIR}/Bin)
-set(DIR_BIN_TEST  ${CMAKE_SOURCE_DIR}/Bin/Tests)
+set(DIR_BIN       ${CMAKE_BINARY_DIR})
+set(DIR_BIN_TEST  ${CMAKE_BINARY_DIR}/Tests)
 set(DIR_GTEST     "$ENV{HOME}/External/googletest" CACHE PATH "GoogleTest source directory")
 
 # ── Core library  (all production code except Main.cpp) ───────
@@ -65,14 +65,14 @@ target_link_libraries(fastsed_core PUBLIC
     Boost::program_options
 )
 
-# ── Main executable  →  Bin/fastsed ──────────────────────────
+# ── Main executable  →  <build>/fastsed ──────────────────────
 add_executable(fastsed ${DIR_SRC}/Main.cpp)
 target_link_libraries(fastsed PRIVATE fastsed_core)
 set_target_properties(fastsed PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${DIR_BIN}
 )
 
-# ── Test binary  →  Bin/Tests/fastsed_tests ──────────────────
+# ── Test binary  →  <build>/Tests/fastsed_tests ──────────────
 if(BUILD_TESTS)
     enable_testing()
 
@@ -125,5 +125,5 @@ install(FILES ${CMAKE_SOURCE_DIR}/Man/fsed.1
 message(STATUS "  Build type : ${CMAKE_BUILD_TYPE}")
 message(STATUS "  Boost      : ${Boost_VERSION}")
 message(STATUS "  Tests      : ${BUILD_TESTS}")
-message(STATUS "  → Bin/fastsed")
-message(STATUS "  → Bin/Tests/fastsed_tests")
+message(STATUS "  → ${CMAKE_BINARY_DIR}/fastsed")
+message(STATUS "  → ${CMAKE_BINARY_DIR}/Tests/fastsed_tests")

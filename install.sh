@@ -10,6 +10,20 @@ if [[ -z "${PREFIX:-}" ]]; then
         PREFIX="${HOME}/.local"
     fi
 fi
+
+choose_build_dir() {
+    if [[ -n "${FASTSED_BUILD_DIR:-}" ]]; then
+        printf '%s' "${FASTSED_BUILD_DIR}"
+        return
+    fi
+    if [[ -d Bin && -w Bin ]]; then
+        printf '%s' Bin
+        return
+    fi
+    printf '%s' .fastsed-build
+}
+
+BUILD_DIR="$(choose_build_dir)"
 REBUILD=0
 DO_BUILD=1
 
@@ -43,7 +57,7 @@ if [[ "$DO_BUILD" -eq 1 ]]; then
     FASTSED_IPO=ON ./b "${build_args[@]}"
 else
     echo "[install] prefix: $PREFIX"
-    cmake --install Bin --prefix "$PREFIX"
+    cmake --install "${BUILD_DIR}" --prefix "$PREFIX"
     echo "[install] installed:"
     echo "[install]   $PREFIX/bin/fsed"
     echo "[install]   $PREFIX/share/man/man1/fsed.1"

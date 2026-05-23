@@ -6,7 +6,19 @@ cd "$(dirname "$0")/.."
 RUNS=7
 WARMUP=2
 DO_BUILD=1
-FASTSED_BIN="${FASTSED_BIN:-./Bin/fastsed}"
+
+choose_build_dir() {
+    if [[ -n "${FASTSED_BUILD_DIR:-}" ]]; then
+        printf '%s' "${FASTSED_BUILD_DIR}"
+        return
+    fi
+    if [[ -d Bin && -w Bin ]]; then
+        printf '%s' Bin
+        return
+    fi
+    printf '%s' .fastsed-build
+}
+FASTSED_BIN="${FASTSED_BIN:-$(choose_build_dir)/fastsed}"
 SED_BIN="${SED_BIN:-/usr/bin/sed}"
 RESULTS_DIR="${RESULTS_DIR:-Benchmark/Results}"
 CSV_OUT="${CSV_OUT:-${RESULTS_DIR}/latest_results.csv}"

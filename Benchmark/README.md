@@ -6,7 +6,7 @@ against the system `sed`.
 ## What it does
 
 - Generates deterministic input files in a temporary directory
-- Verifies that `./Bin/fastsed` and `/usr/bin/sed` produce identical output
+- Verifies that the selected build output and `/usr/bin/sed` produce identical output
 - Runs warmup and measured iterations with a Python `perf_counter()` timer
 - Prints a compact summary with average and best wall-clock time per case
 - Writes CSV, SVG, and PNG comparison artefacts under `Benchmark/Results/`
