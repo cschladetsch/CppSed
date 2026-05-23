@@ -24,6 +24,7 @@ REBUILD=0
 COMPILER_FAMILY="${FASTSED_COMPILER:-clang}"
 IPO_FLAG="${FASTSED_IPO:-OFF}"
 PREFIX="${PREFIX:-/usr/local}"
+GTEST_DIR="${GTEST_DIR:-$HOME/External/googletest}"
 
 case "${COMPILER_FAMILY}" in
     clang)
@@ -87,19 +88,12 @@ if [[ -f Bin/CMakeCache.txt ]]; then
 fi
 
 # ── Ensure GoogleTest is present ──────────────────────────────
-if [[ ! -f Ext/googletest/CMakeLists.txt ]]; then
+if [[ ! -f "${GTEST_DIR}/CMakeLists.txt" ]]; then
     echo "[b] fetching GoogleTest..."
-    mkdir -p Ext
-    # Use submodule update only if Ext/googletest is already registered
-    # in .gitmodules; otherwise do a plain clone.
-    if git config --file .gitmodules --get submodule."Ext/googletest".url \
-            &>/dev/null 2>&1; then
-        git submodule update --init --recursive Ext/googletest
-    else
-        git clone --depth=1 \
-            https://github.com/google/googletest.git \
-            Ext/googletest
-    fi
+    mkdir -p "$(dirname "${GTEST_DIR}")"
+    git clone --depth=1 \
+        https://github.com/google/googletest.git \
+        "${GTEST_DIR}"
 fi
 
 # ── Configure ─────────────────────────────────────────────────
@@ -109,6 +103,7 @@ cmake -B Bin \
     -DCMAKE_C_COMPILER="${CC_BIN}" \
     -DCMAKE_CXX_COMPILER="${CXX_BIN}" \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION="${IPO_FLAG}" \
+    -DDIR_GTEST="${GTEST_DIR}" \
     -DBUILD_TESTS=ON \
     ${BOOST_ROOT:+-DBOOST_ROOT="${BOOST_ROOT}"} \
     ${BOOST_LIBRARYDIR:+-DBOOST_LIBRARYDIR="${BOOST_LIBRARYDIR}"}
@@ -124,6 +119,7 @@ cmake --install Bin --prefix "${PREFIX}"
 echo "[b] done"
 echo "[b]   compiler: ${CXX_BIN}"
 echo "[b]   ipo: ${IPO_FLAG}"
+echo "[b]   gtest: ${GTEST_DIR}"
 echo "[b]   Bin/fastsed"
 echo "[b]   Bin/Tests/fastsed_tests"
 echo "[b]   ${PREFIX}/bin/csed"

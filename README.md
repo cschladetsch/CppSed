@@ -18,7 +18,7 @@ fastsed/
   Test/
     Include/           Test-only headers (TestHelper.hpp)
     Source/            GoogleTest suites (one per module + integration)
-  Ext/googletest/      GoogleTest submodule (cloned on first build)
+  ~/External/googletest/ GoogleTest checkout used by the build
   Bin/                 All build artefacts (CMake intermediate + binaries)
     fastsed            Main binary
     Tests/
@@ -47,6 +47,7 @@ fastsed/
 ```
 
 Installation installs the executable as `csed` and the manual page as `csed(1)`.
+The build expects GoogleTest at `~/External/googletest` by default and will clone it there on first use.
 
 ## Benchmarks
 

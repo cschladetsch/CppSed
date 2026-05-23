@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/clang++
 CXX_DEFINES = -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_IOSTREAMS_DYN_LINK -DBOOST_IOSTREAMS_NO_LIB -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB
 
-CXX_INCLUDES = -I/home/christian/local/repos/CppSed/Test/Include -I/home/christian/local/repos/CppSed/Include -isystem /home/christian/local/repos/CppSed/Ext/googletest/googletest/include -isystem /home/christian/local/repos/CppSed/Ext/googletest/googletest -isystem /home/christian/local/repos/CppSed/Ext/googletest/googlemock/include -isystem /home/christian/local/repos/CppSed/Ext/googletest/googlemock
+CXX_INCLUDES = -I/home/christian/local/repos/CppSed/Test/Include -I/home/christian/local/repos/CppSed/Include -isystem /root/External/googletest/googletest/include -isystem /root/External/googletest/googletest -isystem /root/External/googletest/googlemock/include -isystem /root/External/googletest/googlemock
 
 CXX_FLAGS = -O3 -DNDEBUG -std=c++23 -flto=thin -Wall -Wextra -Wpedantic -O3 -march=native
 

@@ -302,13 +302,13 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestReplacement.cpp.o: \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stream_iterator.h \
   /usr/include/regex.h \
   /home/christian/local/repos/CppSed/Include/fastsed/Regex.hpp \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest.h \
+  /root/External/googletest/googletest/include/gtest/gtest.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/set \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_set.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_multiset.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-assertion-result.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-message.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port.h \
+  /root/External/googletest/googletest/include/gtest/gtest-assertion-result.h \
+  /root/External/googletest/googletest/include/gtest/gtest-message.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-port.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/version \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/stdlib.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/iostream \
@@ -327,8 +327,8 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestReplacement.cpp.o: \
   /usr/include/x86_64-linux-gnu/bits/statx-generic.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_statx_timestamp.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_statx.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-port.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port-arch.h \
+  /root/External/googletest/googletest/include/gtest/internal/custom/gtest-port.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-port-arch.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/condition_variable \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/unique_lock.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/stop_token \
@@ -341,14 +341,14 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestReplacement.cpp.o: \
   /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/semaphore.h \
   /usr/include/x86_64-linux-gnu/bits/semaphore.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/mutex \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-death-test.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-matchers.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-printers.h \
+  /root/External/googletest/googletest/include/gtest/gtest-death-test.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h \
+  /root/External/googletest/googletest/include/gtest/gtest-matchers.h \
+  /root/External/googletest/googletest/include/gtest/gtest-printers.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/any \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/utility \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/bits/stl_relops.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-internal.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-internal.h \
   /usr/include/x86_64-linux-gnu/sys/wait.h /usr/include/signal.h \
   /usr/include/x86_64-linux-gnu/bits/signum-generic.h \
   /usr/include/x86_64-linux-gnu/bits/signum-arch.h \
@@ -373,17 +373,17 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestReplacement.cpp.o: \
   /usr/include/x86_64-linux-gnu/bits/signal_ext.h \
   /usr/include/x86_64-linux-gnu/bits/types/idtype_t.h \
   /usr/lib/llvm-18/lib/clang/18/include/float.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-filepath.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-string.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-type-util.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-filepath.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-string.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-type-util.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/cxxabi.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/x86_64-linux-gnu/c++/13/bits/cxxabi_tweaks.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-printers.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-param-test.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-param-util.h \
+  /root/External/googletest/googletest/include/gtest/internal/custom/gtest-printers.h \
+  /root/External/googletest/googletest/include/gtest/gtest-param-test.h \
+  /root/External/googletest/googletest/include/gtest/internal/gtest-param-util.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/cassert \
   /usr/include/assert.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-test-part.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-typed-test.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_pred_impl.h \
-  /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_prod.h
+  /root/External/googletest/googletest/include/gtest/gtest-test-part.h \
+  /root/External/googletest/googletest/include/gtest/gtest-typed-test.h \
+  /root/External/googletest/googletest/include/gtest/gtest_pred_impl.h \
+  /root/External/googletest/googletest/include/gtest/gtest_prod.h

@@ -41,6 +41,7 @@ set(DIR_TEST_INC  ${CMAKE_SOURCE_DIR}/Test/Include)
 set(DIR_TEST_SRC  ${CMAKE_SOURCE_DIR}/Test/Source)
 set(DIR_BIN       ${CMAKE_SOURCE_DIR}/Bin)
 set(DIR_BIN_TEST  ${CMAKE_SOURCE_DIR}/Bin/Tests)
+set(DIR_GTEST     "$ENV{HOME}/External/googletest" CACHE PATH "GoogleTest source directory")
 
 # ── Core library  (all production code except Main.cpp) ───────
 add_library(fastsed_core STATIC
@@ -78,7 +79,10 @@ if(BUILD_TESTS)
     set(INSTALL_GTEST          OFF CACHE BOOL "" FORCE)
     set(BUILD_GMOCK            ON  CACHE BOOL "" FORCE)
     set(gtest_force_shared_crt ON  CACHE BOOL "" FORCE)
-    add_subdirectory(Ext/googletest EXCLUDE_FROM_ALL)
+    if(NOT EXISTS "${DIR_GTEST}/CMakeLists.txt")
+        message(FATAL_ERROR "GoogleTest not found at ${DIR_GTEST}")
+    endif()
+    add_subdirectory("${DIR_GTEST}" "${CMAKE_BINARY_DIR}/Ext/googletest" EXCLUDE_FROM_ALL)
 
     add_executable(fastsed_tests
         ${DIR_TEST_SRC}/TestReplacement.cpp

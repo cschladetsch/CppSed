@@ -3,27 +3,27 @@
 
 CMakeFiles/fastsed_tests.dir/Test/Source/TestEngineHelpers.cpp.o
  /home/christian/local/repos/CppSed/Test/Source/TestEngineHelpers.cpp
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-assertion-result.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-death-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-matchers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-message.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-param-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-test-part.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-typed-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_pred_impl.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_prod.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-filepath.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-param-util.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port-arch.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-string.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-type-util.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-assertion-result.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-death-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-matchers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-message.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-param-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-test-part.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-typed-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_pred_impl.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_prod.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-filepath.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-param-util.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port-arch.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-string.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-type-util.h
  /home/christian/local/repos/CppSed/Include/fastsed/Address.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Command.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Common.hpp
@@ -419,27 +419,27 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestEngineHelpers.cpp.o
 
 CMakeFiles/fastsed_tests.dir/Test/Source/TestIntegration.cpp.o
  /home/christian/local/repos/CppSed/Test/Source/TestIntegration.cpp
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-assertion-result.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-death-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-matchers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-message.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-param-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-test-part.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-typed-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_pred_impl.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_prod.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-filepath.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-param-util.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port-arch.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-string.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-type-util.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-assertion-result.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-death-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-matchers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-message.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-param-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-test-part.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-typed-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_pred_impl.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_prod.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-filepath.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-param-util.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port-arch.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-string.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-type-util.h
  /home/christian/local/repos/CppSed/Include/fastsed/Address.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Command.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Common.hpp
@@ -1264,27 +1264,27 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestIntegration.cpp.o
 
 CMakeFiles/fastsed_tests.dir/Test/Source/TestLinker.cpp.o
  /home/christian/local/repos/CppSed/Test/Source/TestLinker.cpp
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-assertion-result.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-death-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-matchers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-message.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-param-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-test-part.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-typed-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_pred_impl.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_prod.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-filepath.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-param-util.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port-arch.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-string.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-type-util.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-assertion-result.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-death-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-matchers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-message.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-param-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-test-part.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-typed-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_pred_impl.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_prod.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-filepath.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-param-util.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port-arch.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-string.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-type-util.h
  /home/christian/local/repos/CppSed/Include/fastsed/Address.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Command.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Common.hpp
@@ -1680,27 +1680,27 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestLinker.cpp.o
 
 CMakeFiles/fastsed_tests.dir/Test/Source/TestParser.cpp.o
  /home/christian/local/repos/CppSed/Test/Source/TestParser.cpp
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-assertion-result.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-death-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-matchers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-message.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-param-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-test-part.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-typed-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_pred_impl.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_prod.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-filepath.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-param-util.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port-arch.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-string.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-type-util.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-assertion-result.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-death-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-matchers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-message.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-param-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-test-part.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-typed-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_pred_impl.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_prod.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-filepath.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-param-util.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port-arch.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-string.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-type-util.h
  /home/christian/local/repos/CppSed/Include/fastsed/Address.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Command.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Common.hpp
@@ -2095,27 +2095,27 @@ CMakeFiles/fastsed_tests.dir/Test/Source/TestParser.cpp.o
 
 CMakeFiles/fastsed_tests.dir/Test/Source/TestReplacement.cpp.o
  /home/christian/local/repos/CppSed/Test/Source/TestReplacement.cpp
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-assertion-result.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-death-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-matchers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-message.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-param-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-test-part.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest-typed-test.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_pred_impl.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/gtest_prod.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-filepath.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-internal.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-param-util.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port-arch.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-port.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-string.h
- /home/christian/local/repos/CppSed/Ext/googletest/googletest/include/gtest/internal/gtest-type-util.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-assertion-result.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-death-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-matchers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-message.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-param-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-test-part.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest-typed-test.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_pred_impl.h
+ /home/christian/External/googletest/googletest/include/gtest/gtest_prod.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/custom/gtest-printers.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-death-test-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-filepath.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-internal.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-param-util.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port-arch.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-port.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-string.h
+ /home/christian/External/googletest/googletest/include/gtest/internal/gtest-type-util.h
  /home/christian/local/repos/CppSed/Include/fastsed/Common.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Print.hpp
  /home/christian/local/repos/CppSed/Include/fastsed/Regex.hpp
