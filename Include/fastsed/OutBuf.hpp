@@ -47,7 +47,7 @@ struct OutBuf {
 
     void writeln(string_view sv) noexcept { write(sv); put('\n'); }
 
-    void write_long(long v) noexcept { write(std::to_string(v)); }
+    void write_long(long v) noexcept { char buf[32]; auto [ptr, ec] = std::to_chars(buf, buf + sizeof buf, v); if (ec == std::errc()) write({buf, static_cast<size_t>(ptr - buf)}); }
 };
 
 // Primary output buffer — defined in Common.cpp

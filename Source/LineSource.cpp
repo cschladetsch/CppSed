@@ -7,6 +7,7 @@
 
 #include "fastsed/LineSource.hpp"
 #include <sys/stat.h>
+#include <sys/mman.h>
 
 namespace fastsed {
 
