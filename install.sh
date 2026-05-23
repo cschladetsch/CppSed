@@ -3,7 +3,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-PREFIX="${PREFIX:-/usr/local}"
+if [[ -z "${PREFIX:-}" ]]; then
+    if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+        PREFIX="/usr/local"
+    else
+        PREFIX="${HOME}/.local"
+    fi
+fi
 REBUILD=0
 DO_BUILD=1
 
@@ -39,6 +45,6 @@ else
     echo "[install] prefix: $PREFIX"
     cmake --install Bin --prefix "$PREFIX"
     echo "[install] installed:"
-    echo "[install]   $PREFIX/bin/csed"
-    echo "[install]   $PREFIX/share/man/man1/csed.1"
+    echo "[install]   $PREFIX/bin/fsed"
+    echo "[install]   $PREFIX/share/man/man1/fsed.1"
 fi

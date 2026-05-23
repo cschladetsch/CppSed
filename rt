@@ -35,9 +35,9 @@ TEST_BIN="Bin/Tests/fastsed_tests"
 
 # ── Always build (./b is fast when nothing changed) ───────────
 if [[ $REBUILD -eq 1 ]]; then
-    ./b --rebuild
+    ./b --rebuild --no-install
 else
-    ./b
+    ./b --no-install
 fi
 
 # ── Run ───────────────────────────────────────────────────────

@@ -10,6 +10,8 @@ against the system `sed`.
 - Runs warmup and measured iterations with a Python `perf_counter()` timer
 - Prints a compact summary with average and best wall-clock time per case
 - Writes CSV, SVG, and PNG comparison artefacts under `Benchmark/Results/`
+- Keeps the latest generated outputs versioned in the repo so benchmark
+  changes are easy to review
 
 ## Usage
 

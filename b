@@ -9,21 +9,29 @@
 #              ./rt passes this flag through when invoked
 #              as:  ./rt --rebuild
 #  --prefix    install prefix passed to cmake --install
+#  --no-install skip the install step; only configure + build
 #
 #  Outputs:
 #    Bin/fastsed                    main binary
 #    Bin/Tests/fastsed_tests        test binary
-#    <prefix>/bin/csed              installed executable
-#    <prefix>/share/man/man1/csed.1 installed man page
+#    <prefix>/bin/fsed              installed executable
+#    <prefix>/share/man/man1/fsed.1 installed man page
 # ============================================================
 set -euo pipefail
 cd "$(dirname "$0")"
 
 BUILD_TYPE="Release"
 REBUILD=0
+INSTALL=1
 COMPILER_FAMILY="${FASTSED_COMPILER:-clang}"
 IPO_FLAG="${FASTSED_IPO:-OFF}"
-PREFIX="${PREFIX:-/usr/local}"
+if [[ -z "${PREFIX:-}" ]]; then
+    if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
+        PREFIX="/usr/local"
+    else
+        PREFIX="${HOME}/.local"
+    fi
+fi
 GTEST_DIR="${GTEST_DIR:-$HOME/External/googletest}"
 
 case "${COMPILER_FAMILY}" in
@@ -53,6 +61,10 @@ while [[ $# -gt 0 ]]; do
             REBUILD=1
             shift
             ;;
+        --no-install)
+            INSTALL=0
+            shift
+            ;;
         --prefix)
             PREFIX="$2"
             shift 2
@@ -63,7 +75,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "[b] unknown argument: $1"
-            echo "[b] usage: ./b [--rebuild] [--prefix DIR] [Release|Debug|RelWithDebInfo|MinSizeRel]"
+            echo "[b] usage: ./b [--rebuild] [--no-install] [--prefix DIR] [Release|Debug|RelWithDebInfo|MinSizeRel]"
             exit 1
             ;;
     esac
@@ -82,6 +94,15 @@ if [[ -f Bin/CMakeCache.txt ]]; then
     cached_cxx="$(sed -n 's/^CMAKE_CXX_COMPILER:FILEPATH=//p' Bin/CMakeCache.txt | head -n 1)"
     if [[ -n "${cached_cxx}" && "${cached_cxx}" != "${CXX_BIN}" ]]; then
         echo "[b] compiler changed: ${cached_cxx} -> ${CXX_BIN}"
+        echo "[b] removing Bin/ for a clean reconfigure"
+        rm -rf Bin
+    fi
+fi
+
+if [[ -f Bin/CMakeCache.txt ]]; then
+    cached_gtest="$(sed -n 's/^DIR_GTEST:PATH=//p' Bin/CMakeCache.txt | head -n 1)"
+    if [[ -n "${cached_gtest}" && "${cached_gtest}" != "${GTEST_DIR}" ]]; then
+        echo "[b] gtest path changed: ${cached_gtest} -> ${GTEST_DIR}"
         echo "[b] removing Bin/ for a clean reconfigure"
         rm -rf Bin
     fi
@@ -112,9 +133,11 @@ cmake -B Bin \
 echo "[b] building with ${JOBS} jobs..."
 cmake --build Bin -j"${JOBS}"
 
-# ── Install ───────────────────────────────────────────────────
-echo "[b] installing to ${PREFIX}..."
-cmake --install Bin --prefix "${PREFIX}"
+if [[ "$INSTALL" -eq 1 ]]; then
+    # ── Install ───────────────────────────────────────────────────
+    echo "[b] installing to ${PREFIX}..."
+    cmake --install Bin --prefix "${PREFIX}"
+fi
 
 echo "[b] done"
 echo "[b]   compiler: ${CXX_BIN}"
@@ -122,5 +145,7 @@ echo "[b]   ipo: ${IPO_FLAG}"
 echo "[b]   gtest: ${GTEST_DIR}"
 echo "[b]   Bin/fastsed"
 echo "[b]   Bin/Tests/fastsed_tests"
-echo "[b]   ${PREFIX}/bin/csed"
-echo "[b]   ${PREFIX}/share/man/man1/csed.1"
+if [[ "$INSTALL" -eq 1 ]]; then
+    echo "[b]   ${PREFIX}/bin/fsed"
+    echo "[b]   ${PREFIX}/share/man/man1/fsed.1"
+fi

@@ -114,9 +114,9 @@ endif()
 # ── Install ───────────────────────────────────────────────────
 install(PROGRAMS $<TARGET_FILE:fastsed>
     DESTINATION bin
-    RENAME csed
+    RENAME fsed
 )
-install(FILES ${CMAKE_SOURCE_DIR}/Man/csed.1
+install(FILES ${CMAKE_SOURCE_DIR}/Man/fsed.1
     DESTINATION share/man/man1
 )
 

@@ -46,12 +46,18 @@ fastsed/
 ./Benchmark/run.sh --png-out /tmp/fastsed-bench.png
 ```
 
-Installation installs the executable as `csed` and the manual page as `csed(1)`.
+Installation installs the executable as `fsed` and the manual page as `fsed(1)`.
+By default it installs to `~/.local` for normal users and `/usr/local` for
+root, unless `--prefix` is set explicitly.
 The build expects GoogleTest at `~/External/googletest` by default and will clone it there on first use.
 
 ## Benchmarks
 
-Latest generated comparison image:
+The latest benchmark run is versioned in `Benchmark/Results/`:
+
+- `latest_results.csv`
+- `latest_results.svg`
+- `latest_results.png`
 
 ![fastsed benchmark comparison](Benchmark/Results/latest_results.png)
 
