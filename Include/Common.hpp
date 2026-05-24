@@ -3,9 +3,10 @@
 //  Common.hpp  —  shared includes, type aliases, globals
 // ============================================================
 
+#include "fastsed/Print.hpp"
 #include <algorithm>
-#include <charconv>
 #include <cerrno>
+#include <charconv>
 #include <climits>
 #include <cstdio>
 #include <cstdlib>
@@ -16,7 +17,6 @@
 #include <map>
 #include <memory>
 #include <optional>
-#include "fastsed/Print.hpp"
 #include <ranges>
 #include <span>
 #include <string>
@@ -28,15 +28,15 @@
 namespace fastsed {
 
 namespace fs = std::filesystem;
-using std::string, std::string_view, std::vector,
-      std::shared_ptr, std::make_shared, std::optional;
+using std::string, std::string_view, std::vector, std::shared_ptr,
+    std::make_shared, std::optional;
 
 // ── Global state ─────────────────────────────────────────────
 // Defined in Common.cpp; extern everywhere else.
-extern int g_exit_code;   // set by q / Q commands
+extern int g_exit_code; // set by q / Q commands
 
 // ── Diagnostics ──────────────────────────────────────────────
 [[noreturn]] void die(string_view msg);
-void              warn(string_view msg);
+void warn(string_view msg);
 
 } // namespace fastsed

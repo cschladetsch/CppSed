@@ -14,13 +14,13 @@
 namespace fastsed {
 
 struct Linker {
-    vector<FlatCmd>                 prog;
-    std::map<string, int>           labels;
-    vector<std::pair<int, string>>  fixups; // {prog-idx, label-name}
-    int                             next_id = 0;
+  vector<FlatCmd> prog;
+  std::map<string, int> labels;
+  vector<std::pair<int, string>> fixups; // {prog-idx, label-name}
+  int next_id = 0;
 
-    void flatten(const CmdVec& cmds);
-    void resolve();
+  void flatten(const CmdVec &cmds);
+  void resolve();
 };
 
 } // namespace fastsed

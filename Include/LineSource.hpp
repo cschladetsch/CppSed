@@ -17,45 +17,45 @@ namespace bio = boost::iostreams;
 
 class LineSource {
 public:
-    LineSource()  = default;
-    ~LineSource() = default;
-    LineSource(const LineSource&) = delete;
+  LineSource() = default;
+  ~LineSource() = default;
+  LineSource(const LineSource &) = delete;
 
-    void set_delim   (char d);    // default '\n'; -z uses '\0'
-    void set_separate(bool s);    // -s: treat each file independently
+  void set_delim(char d);    // default '\n'; -z uses '\0'
+  void set_separate(bool s); // -s: treat each file independently
 
-    void add_file  (const string& path); // "-" → stdin
-    void add_stdin ();
+  void add_file(const string &path); // "-" → stdin
+  void add_stdin();
 
-    // Returns true while lines remain.
-    bool has_more();
+  // Returns true while lines remain.
+  bool has_more();
 
-    // Fills line / fname / is_last; advances internal cursor.
-    bool read(string& line, string& fname, bool& is_last);
+  // Fills line / fname / is_last; advances internal cursor.
+  bool read(string &line, string &fname, bool &is_last);
 
 private:
-    // ── Per-segment state ─────────────────────────────────────
-    struct Seg {
-        string              fname;
-        bool                is_pipe = false;
-        // mmap-backed
-        bio::mapped_file_source mf;
-        const char*         cur = nullptr;
-        const char*         end = nullptr;
-    };
+  // ── Per-segment state ─────────────────────────────────────
+  struct Seg {
+    string fname;
+    bool is_pipe = false;
+    // mmap-backed
+    bio::mapped_file_source mf;
+    const char *cur = nullptr;
+    const char *end = nullptr;
+  };
 
-    vector<Seg> segs_;
-    int         si_       = 0;
-    char        delim_    = '\n';
-    bool        separate_ = false;
+  vector<Seg> segs_;
+  int si_ = 0;
+  char delim_ = '\n';
+  bool separate_ = false;
 
-    // ── One-line lookahead ─────────────────────────────────────
-    string peeked_line_, peeked_fname_;
-    bool   have_peek_  = false;
-    bool   peeked_eof_ = false;
+  // ── One-line lookahead ─────────────────────────────────────
+  string peeked_line_, peeked_fname_;
+  bool have_peek_ = false;
+  bool peeked_eof_ = false;
 
-    bool read_raw(string& line, string& fname);
-    bool prime();
+  bool read_raw(string &line, string &fname);
+  bool prime();
 };
 
 } // namespace fastsed
