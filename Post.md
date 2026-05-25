@@ -14,9 +14,9 @@ Here are the key architectural decisions and engineering details that make `fsed
 ---
 
 ## 🚀 1. Zero-Copy I/O via Memory-Mapped Files
-Rather than reading files line-by-line via standard file pointers or streams—which causes high syscall overhead and continuous copy operations—`fsed` utilizes memory-mapped files using `Boost.Iostreams` (`mapped_file_source`).
+Rather than reading files line-by-line via standard file pointers or streams—which causes continuous heap allocations, user-space buffer copies, and high context-switch syscall overhead—`fsed` utilizes memory-mapped files using `Boost.Iostreams` (`mapped_file_source`).
 
-This maps files directly into the virtual address space of the process. The operating system handles caching and page loading at the kernel level, allowing `fsed` to scan, match, and replace strings with zero user-space buffers or copying. Stdin falls back dynamically to an optimized lookahead buffer, keeping execution paths uniform.
+This maps the target file directly into the virtual address space of the process. The operating system handles file caching, page loading, and lookahead prefetching at the kernel level. This allows `fsed` to scan, match, and replace patterns directly inside raw memory addresses with zero intermediate copy buffers. Stdin falls back dynamically to an optimized lookahead buffer, keeping execution paths uniform.
 
 ---
 
@@ -37,14 +37,21 @@ graph TD
 
 ---
 
-## 💾 3. Custom Output Buffering (`OutBuf`)
+## ⚡ 3. Native POSIX Regex vs. C++ standard library `std::regex`
+In modern C++, standard library features are usually preferred. However, C++'s standard regular expression library (`std::regex`) is notoriously slow, heavily criticized in system programming, and suffers from high memory footprint and dynamic allocations during execution (especially in GNU's `libstdc++` and LLVM's `libc++`).
+
+`fsed` makes a deliberate, performance-first trade-off by wrapping native POSIX `regcomp`/`regexec` C APIs. By compiling patterns exactly once and matching repeatedly over direct pointer offsets without heap-allocating intermediate search states, it achieves exceptional matching throughput. For short regex patterns typical in stream scripts, POSIX regex matching measurably outperforms both `std::regex` and `Boost.Regex`.
+
+---
+
+## 💾 4. Custom Output Buffering (`OutBuf`)
 To prevent the terminal or filesystem output from becoming a bottleneck, `fsed` implements a custom 64 KiB buffered writer (`OutBuf.hpp`). 
 
 By bundling multiple lines of output and executing standard `write()` system calls only when the buffer is filled (or upon stream completion), `fsed` eliminates the high overhead of per-line syscalls. This makes bulk transformations on massive files up to several times faster than unbuffered stream operations.
 
 ---
 
-## 🧪 4. Bulletproof Parity via Differential Testing
+## 🧪 5. Bulletproof Parity via Differential Testing
 When replacing a legacy tool, correctness is just as important as speed. To guarantee `fsed` behaves exactly like system `sed`, the test harness runs **348 test cases** organized across six specific suites. 
 
 This includes **200 parameterized generated integration tests** that sweep combinations of deletions, substitutions, and transliterations. The test harness isolates stdin and stdout to detect even the slightest behavioral drift, assuring that `fsed` can be dropped in as a safe, drop-in replacement.
