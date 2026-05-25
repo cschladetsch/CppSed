@@ -24,7 +24,7 @@ Unlike traditional interpreter-based stream editors, `fastsed` parses scripts in
 graph TD
     A[CLI Input / Options] --> B(Parser)
     B -->|Parse Tree: CmdVec| C(Linker)
-    C -->|Flat IR: FlatCmd[] with Pre-computed Jumps| D(Engine)
+    C -->|Flat IR: FlatCmd Vector with Pre-computed Jumps| D(Engine)
     E[(Input Files / stdin)] -->|mmap / LineSource| D
     D -->|Line Loop / Regex / Exec| F(OutBuf)
     F -->|Buffered write| G[stdout / In-place file]

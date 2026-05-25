@@ -30,7 +30,7 @@ Typical interpreters parse script hierarchies and execute them recursively. For 
 
 ```mermaid
 graph TD
-    A[AST Parse Tree] -->|Linker| B[Flat IR Vector: FlatCmd[]]
+    A[AST Parse Tree] -->|Linker| B[Flat IR Vector: FlatCmd Vector]
     B -->|Resolve Jumps| C[Pre-computed Index Jumps]
     C -->|Run Loop| D[Instruction Pointer: O(1) Execution]
 ```
