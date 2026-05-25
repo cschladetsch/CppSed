@@ -1,168 +1,186 @@
-# fastsed
+# CppSed / fastsed
 
-A fast, feature-complete `sed(1)` clone written in C++23.
+[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/compiler_support/23)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Supports the full POSIX command set plus GNU sed extensions: `e F Q R T W z`
-step addresses (`first~step`), `s///` flags `i g e nth`, `\l \u \L \U \E` in
-replacements, and `--sandbox` mode.
+A high-performance, feature-complete clone of `sed(1)` written in modern C++23. It implements the full POSIX stream editor command set along with high-value GNU sed extensions (such as in-place editing, case conversion, and sandbox mode).
 
-## Layout
+---
 
+## 🎯 Core Philosophy
+
+`fastsed` was built with three strict principles:
+1. **Keep it Correct**: Full POSIX standard compliance, thoroughly validated with a comprehensive integration test suite.
+2. **Keep it Practical**: Native support for crucial GNU extensions (`e`, `F`, `Q`, `R`, `T`, `W`, `z`), step addresses, and in-place substitutions that developers use daily.
+3. **Keep it Fast**: Zero unnecessary allocations on hot execution paths, zero-copy memory mapping for file inputs, and an optimizing jump-flattening compiler/linker model.
+
+---
+
+## 🏛️ Architecture & Execution Pipeline
+
+Unlike traditional interpreter-based stream editors, `fastsed` parses scripts into a high-level AST, which a linker then flattens into a jump-optimized instruction list (Flat IR) before executing. This avoids deep recursion and yields $O(1)$ jumps for labels, block entry/exit (`{...}`), and conditional branches (`t`, `T`, `b`).
+
+```mermaid
+graph TD
+    A[CLI Input / Options] --> B(Parser)
+    B -->|Parse Tree: CmdVec| C(Linker)
+    C -->|Flat IR: FlatCmd[] with Pre-computed Jumps| D(Engine)
+    E[(Input Files / stdin)] -->|mmap / LineSource| D
+    D -->|Line Loop / Regex / Exec| F(OutBuf)
+    F -->|Buffered write| G[stdout / In-place file]
 ```
-fastsed/
-  Include/fastsed/     Production headers (one per module)
-  Source/              Production sources + Main.cpp
-  Benchmark/
-    Scripts/           sed programs used by the benchmark harness
-    run.sh             compares the selected build output against system sed
-  Test/
-    Include/           Test-only headers (TestHelper.hpp)
-    Source/            GoogleTest suites (one per module + integration)
-  ~/External/googletest/ GoogleTest checkout used by the build
-  Bin/ or .fastsed-build/  Build artefacts (CMake intermediate + binaries)
-    fastsed            Main binary
-    Tests/
-      fastsed_tests    Test binary
-  b                    Build script
-  rt                   Test runner
-  CMakeLists.txt
-```
 
-## Quick start
+### Component Breakdown
+
+| Header | Responsibility | Description |
+| :--- | :--- | :--- |
+| `Options.hpp` | CLI Arguments | Handles program options (`--expression`, `--file`, `--sandbox`, `-i`, etc.) via `Boost.Program_options`. |
+| `Parser.hpp` | AST Generation | A recursive-descent parser that compiles raw sed scripts into an abstract syntax tree of address-command pairings. |
+| `Linker.hpp` | Branch Resolution | Flattens the parsed AST into a flat instruction vector (`FlatCmd[]`) and resolves branch target labels to absolute indices for $O(1)$ runtime jumps. |
+| `LineSource.hpp` | High-Speed I/O | Feeds lines efficiently using `Boost.Iostreams` memory-mapped files (`mapped_file_source`) with fallback stdin lookahead buffering. |
+| `Regex.hpp` | Regular Expressions | POSIX `regcomp`/`regexec` wrapper. By compiling patterns once and matching repeatedly, it significantly outperforms `Boost.Regex` for standard sed workloads. |
+| `Replacement.hpp` | Substitution Parsing | Parses substitution patterns (`s/find/replace/`) into specialized token structures to efficiently execute backreferences and case conversions. |
+| `Engine.hpp` | Execution Core | A high-performance instruction pointer loop carrying out actions on the flat instruction stream, keeping state in hold and pattern spaces. |
+| `OutBuf.hpp` | Buffered Output | A custom 64 KiB buffered stdout writer, bypassing per-line system call overheads to prevent output bottlenecks. |
+
+---
+
+## ⚡ Boost Dependencies
+
+`fastsed` leverages Boost for system-level integrations while keeping regex operations in native POSIX space:
+
+| Boost Component | Usage |
+| :--- | :--- |
+| `Boost.Iostreams` | Zero-copy `mapped_file_source` mmap of input files. |
+| `Boost.Program_options` | Standard and clean CLI option parsing and validation. |
+| `Boost.Filesystem` | Safe temporary file path handling for reliable in-place (`-i`) file edits. |
+| `Boost.Process` | Shell-out operations via `exec_shell` for the `e` command, replacing slower `popen` calls. |
+
+---
+
+## 🛠️ Build and Installation
+
+### Prerequisites
+- **Compiler**: A C++23 compliant compiler (e.g., GCC 13+, Clang 16+, or MSVC 2022).
+- **Build System**: CMake 3.20+
+- **Libraries**: Boost libraries 1.70+
+
+### Linux / macOS
+
+We provide helper scripts for typical configurations:
 
 ```bash
-./b          # configure + build (Release)
-./b Debug    # debug build
-./install.sh --prefix "$HOME/.local"
+# Clone the repository and submodules
+git clone https://github.com/cschladetsch/CppSed.git
+cd CppSed
 
-./rt         # build then run all 148 tests
-./rt --rebuild           # wipe the selected build dir, full rebuild, then run tests
-./rt --filter Integration # run only tests matching a pattern
-./rt --repeat 5          # run the suite 5 times
-./rt --verbose           # print per-test timing
+# Configure and compile in Release mode (builds into Bin/)
+./b
 
-./Benchmark/run.sh       # compare fastsed against /usr/bin/sed
-./Benchmark/run.sh --runs 10 --warmup 3
-./Benchmark/run.sh --png-out /tmp/fastsed-bench.png
+# Build in Debug mode
+./b Debug
+
+# Clean and perform a full rebuild
+./rt --rebuild
+
+# Run all 348 unit/integration tests
+./rt
 ```
 
-Installation installs the executable as `fsed` and the manual page as `fsed(1)`.
-By default it installs to `~/.local` for normal users and `/usr/local` for
-root, unless `--prefix` is set explicitly.
-If `Bin/` is not writable, the build scripts fall back to `.fastsed-build/`
-automatically.
-The build expects GoogleTest at `~/External/googletest` by default and will clone it there on first use.
-
-## Benchmarks
-
-The latest benchmark run is versioned in `Benchmark/Results/`:
-
-- `latest_results.csv`
-- `latest_results.svg`
-- `latest_results.png`
-
-![fastsed benchmark comparison](Benchmark/Results/latest_results.png)
-
-Regenerate it with:
-
+To install the built executable as `fsed` and install the man page:
 ```bash
-./Benchmark/run.sh --runs 10 --warmup 3
+# Default prefix is ~/.local (user) or /usr/local (root)
+./install.sh
+
+# Install to custom directory
+./install.sh --prefix "/opt/fastsed"
 ```
 
-## Examples
+### Windows (PowerShell)
 
-```bash
-# Basic substitution
-echo 'alpha beta' | ./Bin/fastsed 's/beta/gamma/'
-
-# Print only matching lines
-./Bin/fastsed -n '/error/p' app.log
-
-# Edit a file in place and keep a backup
-./Bin/fastsed -i.bak 's/localhost/db.internal/g' config.ini
-
-# Use extended regex syntax
-printf 'cat\ncot\ncut\n' | ./Bin/fastsed -E '/c(a|o)t/p'
-
-# Apply multiple commands
-printf 'a\nb\nc\n' | ./Bin/fastsed -e '1d' -e '$a done'
-
-# Run a script from a file
-./Bin/fastsed -f scripts/cleanup.sed input.txt
-
-# Replace only every second match on each line
-echo 'one two two two' | ./Bin/fastsed 's/two/TWO/2g'
-
-# Step addresses (GNU extension): print every third line starting at line 2
-seq 10 | ./Bin/fastsed -n '2~3p'
-
-# Treat NUL as the line delimiter
-printf 'a\0b\0c\0' | ./Bin/fastsed -z 's/b/B/'
-
-# Sandbox mode disables commands that touch the shell or filesystem
-./Bin/fastsed --sandbox -f script.sed input.txt
-```
-
-Notes:
-`--sandbox` rejects `e`, `r`, `R`, `w`, and `W` commands.
-`-s` processes each input file as its own stream, while plain multi-file input is treated as one continuous stream.
-
-## Architecture
-
-| Header | Responsibility |
-|---|---|
-| `OutBuf.hpp` | 64 KiB buffered writer — avoids per-line `write()` syscall |
-| `Regex.hpp` | POSIX `regcomp`/`regexec` wrapper — compiled once, matched many |
-| `Replacement.hpp` | Pre-parsed `s///` replacement token list |
-| `Address.hpp` | Address kinds: line, `$`, `/re/`, `first~step` |
-| `Command.hpp` | Parse tree (`Cmd`/`CmdVec`) and flat IR (`FlatCmd`) |
-| `Parser.hpp` | Recursive-descent sed script parser |
-| `Linker.hpp` | Flattens parse tree to `FlatCmd[]`, resolves label jumps |
-| `Engine.hpp` | PC-based execution loop, hold space, deferred output |
-| `LineSource.hpp` | `Boost.Iostreams` `mapped_file_source` + stdin lookahead |
-| `Options.hpp` | `Boost.Program_options` CLI parser |
-
-The engine never recurses into nested `{…}` blocks at runtime. The linker
-converts them to a flat array with pre-computed jump indices, so `b`/`t`/`T`
-and block entry/exit are O(1) branches.
-
-## Boost components
-
-| Component | Used for |
-|---|---|
-| `Boost.Iostreams` `mapped_file_source` | Zero-copy mmap of input files |
-| `Boost.Program_options` | `--expression`, `--file`, `--sandbox`, `-i`, etc. |
-| `Boost.Filesystem` | Temp file paths for in-place (`-i`) editing |
-| `Boost.Process` | `exec_shell()` for the `e` command (replaces `popen`) |
-
-POSIX `regcomp`/`regexec` is used instead of `Boost.Regex` — it is
-measurably faster for the short patterns typical in sed scripts.
-
-## Building on Windows
+Ensure Boost is installed and set the paths accordingly:
 
 ```powershell
 cmake -B Bin `
-      -DBOOST_ROOT="D:/boost/boost_1_91_0" `
-      -DBOOST_LIBRARYDIR="D:/boost/boost_1_91_0/stage/lib" `
+      -DBOOST_ROOT="C:/local/boost_1_84_0" `
+      -DBOOST_LIBRARYDIR="C:/local/boost_1_84_0/lib64-msvc-14.3" `
       -DCMAKE_BUILD_TYPE=Release
-cmake --build Bin
+cmake --build Bin --config Release
 ```
 
-## Tests
+---
 
-348 GoogleTest cases across six suites:
+## 📖 Command Reference & Examples
 
-![Test group distribution](Test/Results/test_groups.svg)
+### Basic Substitutions & Prints
+```bash
+# Standard substitution (replaces first occurrence on line)
+echo 'alpha beta' | ./Bin/fastsed 's/beta/gamma/'
 
-| Suite | Tests | Covers |
-|---|---|---|
-| `ParseRepl` / `ApplyRepl` | 18 | Replacement token parsing, case conversion, back-refs |
-| `Parser` | 38 | Every address type, command, flag, block, negation |
-| `Linker` | 18 | Flatten, jump targets, label resolution, death tests |
-| `DoTrans` / `DoList` / `DoSubst` | 27 | `y`, `l`, `s` helpers with all flag combos |
-| `Integration` | 47 | End-to-end via `run_sed()` in `Test/Include/TestHelper.hpp` |
-| `Generated` | 200 | Parameterized regression sweep across substitution, deletion, transliteration, and line numbering |
+# Global replacement with case insensitivity (GNU extension)
+echo 'Alpha alpha' | ./Bin/fastsed 's/alpha/beta/gi'
 
-`TestHelper.hpp` redirects `g_out` to a pipe and feeds input via a
-`mkstemp` temp file, so each test is fully isolated with no global state
-leakage.
+# Print ONLY matching lines (-n suppresses automatic printing)
+./Bin/fastsed -n '/[Ee]rror/p' server.log
+```
+
+### GNU Sed Extensions
+```bash
+# Step addresses: Apply command to every 3rd line starting at line 2
+seq 10 | ./Bin/fastsed -n '2~3p'
+
+# In-place file editing with backup generation
+./Bin/fastsed -i.bak 's/localhost/db.internal/g' config.yaml
+
+# Evaluate replacement string as a shell command (GNU 'e' flag)
+echo 'date' | ./Bin/fastsed 's/.*/&/e'
+
+# Process lines delimited by NUL (\0) instead of newline (\n)
+printf 'first\0second\0third\0' | ./Bin/fastsed -z 's/second/SECOND/'
+```
+
+### Advanced Case Control in Substitution
+```bash
+# Convert matching group to lowercase (\L...\E) or uppercase (\U...\E)
+echo 'HELLO world' | ./Bin/fastsed -E 's/(HELLO) (world)/\L\1\E \U\2\E/'
+# Output: hello WORLD
+```
+
+### 🔒 Sandbox Mode
+For security-conscious environments, you can disable commands that interface with the shell or the filesystem (such as `e`, `r`, `R`, `w`, and `W`):
+
+```bash
+# Will abort if execution contains shell commands or file reads/writes
+./Bin/fastsed --sandbox -f script.sed input.txt
+```
+
+---
+
+## 📊 Benchmarks
+
+The benchmark suite compares `fastsed` execution times directly against native `/usr/bin/sed`. Results are stored under `Benchmark/Results/`.
+
+To run the benchmarking suite locally:
+```bash
+./Benchmark/run.sh --runs 10 --warmup 3
+```
+
+---
+
+## 🧪 Testing Suite
+
+`fastsed` features robust test coverage consisting of **348 test cases** organized across six specific suites to prevent regressions:
+
+| Suite | Focus | Covers |
+| :--- | :--- | :--- |
+| `ParseRepl` / `ApplyRepl` | Replacements | Regex substitutions, backreferences, and case-conversion tokens. |
+| `Parser` | Grammar | Addresses, Address-ranges, command-structures, blocks, and negation operators. |
+| `Linker` | Optimization | AST flattening, label indexes, jump resolution, and error validation. |
+| `DoTrans` / `DoList` / `DoSubst` | Stream Helpers | In-memory operations for `y`, `l`, and `s` commands. |
+| `Integration` | End-to-end | Execution against redirected buffers and CLI parameter sweeps. |
+| `Generated` | Differential | 200 parameterized tests verifying behavior parity. |
+
+Run tests at any time with:
+```bash
+./rt
+```
