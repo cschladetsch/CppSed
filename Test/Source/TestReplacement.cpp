@@ -5,21 +5,19 @@
 #include "fastsed/Regex.hpp"
 #include "fastsed/Replacement.hpp"
 #include <gtest/gtest.h>
-#include <regex.h>
 
 using namespace fastsed;
 
 // ── Helpers ───────────────────────────────────────────────────
-// Run a POSIX regex match and return regmatch_t array
-static std::vector<regmatch_t> do_match(const std::string &pattern,
+// Run a match through fastsed::RE and return its regmatch_t array.
+static std::vector<fastsed::regmatch_t> do_match(const std::string &pattern,
                                         const std::string &text,
                                         size_t nmatch = 10) {
-  regex_t re;
-  EXPECT_EQ(regcomp(&re, pattern.c_str(), REG_EXTENDED), 0);
-  std::vector<regmatch_t> pm(nmatch);
-  int r = regexec(&re, text.c_str(), nmatch, pm.data(), 0);
-  regfree(&re);
-  if (r != 0)
+  RE re;
+  re.compile(pattern, REG_EXTENDED);
+  std::vector<fastsed::regmatch_t> pm(nmatch);
+  bool matched = re.exec(text.c_str(), nmatch, pm.data());
+  if (!matched)
     pm[0].rm_so = -1;
   return pm;
 }

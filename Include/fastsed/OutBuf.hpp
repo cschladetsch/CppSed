@@ -5,7 +5,15 @@
 // ============================================================
 
 #include "Common.hpp"
+
+#if defined(_WIN32)
+#include <io.h>
+#ifndef STDOUT_FILENO
+#define STDOUT_FILENO 1 // same numeric convention as POSIX/the CRT
+#endif
+#else
 #include <unistd.h>
+#endif
 
 namespace fastsed {
 
@@ -22,7 +30,11 @@ struct OutBuf {
 
   void flush() noexcept {
     for (size_t off = 0; off < n;) {
+#if defined(_WIN32)
+      int w = ::_write(fd, buf + off, static_cast<unsigned int>(n - off));
+#else
       ssize_t w = ::write(fd, buf + off, n - off);
+#endif
       if (w <= 0)
         break;
       off += static_cast<size_t>(w);

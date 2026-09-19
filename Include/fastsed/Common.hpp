@@ -20,9 +20,13 @@
 #include <span>
 #include <string>
 #include <string_view>
-#include <unistd.h>
 #include <variant>
 #include <vector>
+
+#if !defined(_WIN32)
+#include <unistd.h> // ssize_t, STDOUT_FILENO, etc. — POSIX only; see
+                    // OutBuf.hpp/Main.cpp for the Windows equivalents.
+#endif
 
 namespace fastsed {
 

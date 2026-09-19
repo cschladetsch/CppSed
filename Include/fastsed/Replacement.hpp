@@ -6,7 +6,7 @@
 // ============================================================
 
 #include "Common.hpp"
-#include <regex.h>
+#include "Regex.hpp" // regmatch_t
 
 namespace fastsed {
 

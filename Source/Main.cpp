@@ -11,7 +11,22 @@
 #include "fastsed/Parser.hpp"
 
 #include <fcntl.h>
+
+#if defined(_WIN32)
+#include <io.h>
 #include <sys/stat.h>
+#define FASTSED_OPEN(path, flags, mode) ::_open((path), (flags), (mode))
+#define FASTSED_CLOSE(fd) ::_close(fd)
+#define FASTSED_UNLINK(path) ::_unlink(path)
+#define FASTSED_CREAT_MODE (_S_IREAD | _S_IWRITE)
+#else
+#include <sys/stat.h>
+#include <unistd.h>
+#define FASTSED_OPEN(path, flags, mode) ::open((path), (flags), (mode))
+#define FASTSED_CLOSE(fd) ::close(fd)
+#define FASTSED_UNLINK(path) ::unlink(path)
+#define FASTSED_CREAT_MODE 0600
+#endif
 
 namespace fastsed {
 
@@ -22,15 +37,16 @@ struct InplaceGuard {
 
   ~InplaceGuard() {
     if (tmp_fd >= 0) {
-      ::close(tmp_fd);
-      ::unlink(tmp.c_str());
+      FASTSED_CLOSE(tmp_fd);
+      FASTSED_UNLINK(tmp.c_str());
     }
   }
 
   void begin(const string &path) {
     orig = path;
     tmp = path + ".fastsed_tmp";
-    tmp_fd = ::open(tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    tmp_fd = FASTSED_OPEN(tmp.c_str(), O_WRONLY | O_CREAT | O_TRUNC,
+                          FASTSED_CREAT_MODE);
     if (tmp_fd < 0)
       die(std::format("cannot create '{}': {}", tmp, strerror(errno)));
     g_out.flush();
@@ -39,7 +55,7 @@ struct InplaceGuard {
 
   void commit(const string &suffix) {
     g_out.flush();
-    ::close(tmp_fd);
+    FASTSED_CLOSE(tmp_fd);
     tmp_fd = -1;
     g_out.fd = STDOUT_FILENO;
     if (!suffix.empty()) {

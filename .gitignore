@@ -1,5 +1,5 @@
-/external
 /Bin
+/external
 /Bin/Ext/
 .fastsed-build/
 /GeneratedTargets.cmake
