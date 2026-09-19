@@ -1,7 +1,7 @@
 #pragma once
 // ============================================================
 //  Options.hpp  —  CLI option bag + parse_args()
-//  Parsing is done by Boost.Program_options (Options.cpp).
+//  Parsing is hand-rolled, GNU-getopt style (see Options.cpp).
 // ============================================================
 
 #include "Common.hpp"

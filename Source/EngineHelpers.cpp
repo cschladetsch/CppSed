@@ -1,7 +1,8 @@
 // ============================================================
 //  EngineHelpers.cpp  —  stateless engine helper functions
 //
-//  exec_shell  uses Boost.Process v1 (replaces popen)
+//  exec_shell  runs a shell command and captures its stdout via
+//              popen(3)/_popen (replaces Boost.Process)
 //  do_list     visually unambiguous pattern-space print
 //  do_trans    byte-level transliteration (y command)
 //  do_subst    s/// with all flags
@@ -9,20 +10,37 @@
 
 #include "fastsed/Engine.hpp"
 
-#include <boost/process.hpp>
+#include <array>
+#include <cstdio>
+
+#if defined(_WIN32)
+#define FASTSED_POPEN  _popen
+#define FASTSED_PCLOSE _pclose
+#else
+#define FASTSED_POPEN  popen
+#define FASTSED_PCLOSE pclose
+#endif
 
 namespace fastsed {
-namespace bp = boost::process;
 
 // ── exec_shell ───────────────────────────────────────────────
+// POSIX: runs via the user's shell ("sh -c cmd") same as popen()
+// always does. Windows: _popen() runs via cmd.exe ("cmd /c cmd"),
+// which is _popen's own built-in behaviour — no explicit shell
+// argument is needed or accepted on that path.
 string exec_shell(const string &cmd) {
-  bp::ipstream pipe;
-  bp::child child(bp::search_path("sh"), bp::args({"-c", cmd}),
-                  bp::std_out > pipe);
-  string result, line;
-  while (std::getline(pipe, line))
-    result += line + '\n';
-  child.wait();
+  FILE *pipe = FASTSED_POPEN(cmd.c_str(), "r");
+  if (!pipe)
+    die(std::format("popen: {}", strerror(errno)));
+
+  string result;
+  std::array<char, 4096> buf{};
+  size_t n;
+  while ((n = std::fread(buf.data(), 1, buf.size(), pipe)) > 0)
+    result.append(buf.data(), n);
+
+  FASTSED_PCLOSE(pipe);
+
   while (!result.empty() && result.back() == '\n')
     result.pop_back();
   return result;

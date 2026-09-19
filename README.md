@@ -34,27 +34,14 @@ graph TD
 
 | Header | Responsibility | Description |
 | :--- | :--- | :--- |
-| `Options.hpp` | CLI Arguments | Handles program options (`--expression`, `--file`, `--sandbox`, `-i`, etc.) via `Boost.Program_options`. |
+| `Options.hpp` | CLI Arguments | Hand-rolled, GNU-getopt-style parsing of program options (`--expression`, `--file`, `--sandbox`, `-i`, etc.) — no third-party dependency. |
 | `Parser.hpp` | AST Generation | A recursive-descent parser that compiles raw sed scripts into an abstract syntax tree of address-command pairings. |
 | `Linker.hpp` | Branch Resolution | Flattens the parsed AST into a flat instruction vector (`FlatCmd[]`) and resolves branch target labels to absolute indices for $O(1)$ runtime jumps. |
-| `LineSource.hpp` | High-Speed I/O | Feeds lines efficiently using `Boost.Iostreams` memory-mapped files (`mapped_file_source`) with fallback stdin lookahead buffering. |
-| `Regex.hpp` | Regular Expressions | POSIX `regcomp`/`regexec` wrapper. By compiling patterns once and matching repeatedly, it significantly outperforms `Boost.Regex` for standard sed workloads. |
+| `LineSource.hpp` | High-Speed I/O | Feeds lines efficiently via `MappedFile` (a small `mmap`/`MapViewOfFile` wrapper) with fallback stdin lookahead buffering. |
+| `Regex.hpp` | Regular Expressions | POSIX `regcomp`/`regexec` wrapper. By compiling patterns once and matching repeatedly, it significantly outperforms `std::regex` for standard sed workloads. |
 | `Replacement.hpp` | Substitution Parsing | Parses substitution patterns (`s/find/replace/`) into specialized token structures to efficiently execute backreferences and case conversions. |
 | `Engine.hpp` | Execution Core | A high-performance instruction pointer loop carrying out actions on the flat instruction stream, keeping state in hold and pattern spaces. |
 | `OutBuf.hpp` | Buffered Output | A custom 64 KiB buffered stdout writer, bypassing per-line system call overheads to prevent output bottlenecks. |
-
----
-
-## ⚡ Boost Dependencies
-
-`fastsed` leverages Boost for system-level integrations while keeping regex operations in native POSIX space:
-
-| Boost Component | Usage |
-| :--- | :--- |
-| `Boost.Iostreams` | Zero-copy `mapped_file_source` mmap of input files. |
-| `Boost.Program_options` | Standard and clean CLI option parsing and validation. |
-| `Boost.Filesystem` | Safe temporary file path handling for reliable in-place (`-i`) file edits. |
-| `Boost.Process` | Shell-out operations via `exec_shell` for the `e` command, replacing slower `popen` calls. |
 
 ---
 
@@ -63,7 +50,7 @@ graph TD
 ### Prerequisites
 - **Compiler**: A C++23 compliant compiler (e.g., GCC 13+, Clang 16+, or MSVC 2022).
 - **Build System**: CMake 3.20+
-- **Libraries**: Boost libraries 1.70+
+- **Libraries**: None — `fastsed` has no third-party runtime dependencies. (GoogleTest is only needed to build the optional test suite.)
 
 ### Linux / macOS
 
@@ -90,21 +77,18 @@ cd CppSed
 To install the built executable as `fsed` and install the man page:
 ```bash
 # Default prefix is ~/.local (user) or /usr/local (root)
-./install.sh
+./install.ps1
 
 # Install to custom directory
-./install.sh --prefix "/opt/fastsed"
+./install.ps1 -Prefix "/opt/fastsed"
 ```
 
 ### Windows (PowerShell)
 
-Ensure Boost is installed and set the paths accordingly:
+No third-party library setup needed — just configure and build:
 
 ```powershell
-cmake -B Bin `
-      -DBOOST_ROOT="C:/local/boost_1_84_0" `
-      -DBOOST_LIBRARYDIR="C:/local/boost_1_84_0/lib64-msvc-14.3" `
-      -DCMAKE_BUILD_TYPE=Release
+cmake -B Bin -DCMAKE_BUILD_TYPE=Release
 cmake --build Bin --config Release
 ```
 
@@ -162,7 +146,7 @@ The benchmark suite compares `fastsed` execution times directly against native `
 
 To run the benchmarking suite locally:
 ```bash
-./Benchmark/run.sh --runs 10 --warmup 3
+./Benchmark/run.ps1 -Runs 10 -Warmup 3
 ```
 
 ---

@@ -1,13 +1,11 @@
 // ============================================================
 //  LineSource.cpp  —  unified line reader
-//  Files   → Boost.Iostreams mapped_file_source (zero-copy)
+//  Files   → fastsed::MappedFile (zero-copy mmap)
 //  stdin   → fgetc streaming
 //  Both    → one-line lookahead for accurate last_line
 // ============================================================
 
 #include "fastsed/LineSource.hpp"
-#include <sys/mman.h>
-#include <sys/stat.h>
 
 namespace fastsed {
 
@@ -30,27 +28,16 @@ void LineSource::add_file(const string &path) {
   Seg seg;
   seg.fname = path;
 
-  try {
-    // Boost.Iostreams mapped_file_source cannot map a 0-byte file.
-    // Stat first; if the file is empty just leave cur==end==nullptr
-    // and the segment will be skipped naturally in read_raw().
-    struct stat st {};
-    if (::stat(path.c_str(), &st) != 0)
-      die(std::format("cannot stat '{}': {}", path, strerror(errno)));
+  // MappedFile::open() returns true (with is_open()==false) for a
+  // 0-byte file rather than failing — cur/end stay nullptr and the
+  // segment is skipped naturally in read_raw(). It only returns
+  // false on a real error (missing file, permissions, etc.).
+  if (!seg.mf.open(path))
+    die(std::format("cannot open '{}': {}", path, seg.mf.error()));
 
-    if (st.st_size > 0) {
-      bio::mapped_file_params params;
-      params.path = path;
-      params.flags = bio::mapped_file::readonly;
-      seg.mf.open(params);
-      if (!seg.mf.is_open())
-        die(std::format("cannot open '{}'", path));
-      seg.cur = seg.mf.data();
-      seg.end = seg.cur + seg.mf.size();
-    }
-    // else: empty file — cur and end remain nullptr, read_raw skips it
-  } catch (const std::exception &e) {
-    die(std::format("cannot map '{}': {}", path, e.what()));
+  if (seg.mf.is_open()) {
+    seg.cur = seg.mf.data();
+    seg.end = seg.cur + seg.mf.size();
   }
 
   segs_.push_back(std::move(seg));

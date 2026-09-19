@@ -25,57 +25,95 @@ add_compile_options(
     $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2>
 )
 
-# ── Boost ─────────────────────────────────────────────────────
-# Windows: cmake -DBOOST_ROOT=D:/boost/boost_1_91_0 ...
-# Linux/macOS: system Boost found automatically.
-set(Boost_USE_STATIC_LIBS    OFF)
-set(Boost_USE_MULTITHREADED  ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.74 REQUIRED
-    COMPONENTS filesystem iostreams program_options)
-
 # ── Paths ─────────────────────────────────────────────────────
-set(DIR_INC       ${CMAKE_SOURCE_DIR}/Include)
-set(DIR_SRC       ${CMAKE_SOURCE_DIR}/Source)
-set(DIR_TEST_INC  ${CMAKE_SOURCE_DIR}/Test/Include)
-set(DIR_TEST_SRC  ${CMAKE_SOURCE_DIR}/Test/Source)
 set(DIR_BIN       ${CMAKE_BINARY_DIR})
 set(DIR_BIN_TEST  ${CMAKE_BINARY_DIR}/Tests)
-set(DIR_GTEST     "$ENV{HOME}/External/googletest" CACHE PATH "GoogleTest source directory")
 
-# ── Core library  (all production code except Main.cpp) ───────
-add_library(fastsed_core STATIC
-    ${DIR_SRC}/Common.cpp
-    ${DIR_SRC}/Regex.cpp
-    ${DIR_SRC}/Replacement.cpp
-    ${DIR_SRC}/Parser.cpp
-    ${DIR_SRC}/Linker.cpp
-    ${DIR_SRC}/EngineHelpers.cpp
-    ${DIR_SRC}/Engine.cpp
-    ${DIR_SRC}/LineSource.cpp
-    ${DIR_SRC}/Options.cpp
-)
-target_include_directories(fastsed_core PUBLIC
-    ${DIR_INC}
-    ${Boost_INCLUDE_DIRS}
-)
-target_link_libraries(fastsed_core PUBLIC
-    Boost::filesystem
-    Boost::iostreams
-    Boost::program_options
-)
+# GoogleTest: default to the copy that already comes along for free
+# with `git submodule update --init --recursive` (it's CppLogicMake's
+# own test dependency, vendored under external/CppLogiMake/external/
+# googletest) — no separate manual clone required. $ENV{HOME}/External/
+# googletest, if present, still wins, since that's where the old setup
+# expected a shared checkout and some machines already have one there;
+# -DDIR_GTEST=... overrides either default explicitly.
+set(_fastsed_default_gtest "${CMAKE_SOURCE_DIR}/external/CppLogiMake/external/googletest")
+if(EXISTS "$ENV{HOME}/External/googletest/CMakeLists.txt")
+    set(_fastsed_default_gtest "$ENV{HOME}/External/googletest")
+endif()
+set(DIR_GTEST "${_fastsed_default_gtest}" CACHE PATH "GoogleTest source directory")
 
-# ── Main executable  →  <build>/fastsed ──────────────────────
-add_executable(fastsed ${DIR_SRC}/Main.cpp)
-target_link_libraries(fastsed PRIVATE fastsed_core)
-set_target_properties(fastsed PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${DIR_BIN}
-)
+# ── Build graph: generated from fastsed.lm by CppLogicMake ─────
+# fastsed_core / fastsed / fastsed_tests and their sources, include
+# paths and dependency links all come from GeneratedTargets.cmake,
+# which is (re)generated below from fastsed.lm — that file is now the
+# source of truth for the target graph; edit it, not the generated
+# output. See fastsed.lm for why Boost and GoogleTest are modelled as
+# sourceless stand-in targets there.
+set(LOGICMAKE_ROOT "${CMAKE_SOURCE_DIR}/external/CppLogiMake" CACHE PATH
+    "CppLogicMake checkout used to transpile fastsed.lm into CMake")
+if(NOT EXISTS "${LOGICMAKE_ROOT}/prolog/targets.pl")
+    message(FATAL_ERROR
+        "CppLogicMake not found at ${LOGICMAKE_ROOT} - run:\n"
+        "  git submodule update --init --recursive")
+endif()
 
-# ── Test binary  →  <build>/Tests/fastsed_tests ──────────────
+set(LOGICMAKE_HOST_BUILD_DIR "${CMAKE_BINARY_DIR}/logicmake-host")
+set(LOGICMAKE_DRIVER "${LOGICMAKE_HOST_BUILD_DIR}/logicmake")
+if(NOT EXISTS "${LOGICMAKE_DRIVER}")
+    message(STATUS "Building CppLogicMake driver (host tool)...")
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -S "${LOGICMAKE_ROOT}" -B "${LOGICMAKE_HOST_BUILD_DIR}"
+                -DCMAKE_BUILD_TYPE=Release
+        RESULT_VARIABLE _logicmake_configure_rc
+    )
+    if(NOT _logicmake_configure_rc EQUAL 0)
+        message(FATAL_ERROR "failed to configure the CppLogicMake driver")
+    endif()
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} --build "${LOGICMAKE_HOST_BUILD_DIR}" --target logicmake
+        RESULT_VARIABLE _logicmake_build_rc
+    )
+    if(NOT _logicmake_build_rc EQUAL 0)
+        message(FATAL_ERROR "failed to build the CppLogicMake driver")
+    endif()
+endif()
+
+# CppLogicMake rebases every source/include path in its output to be
+# relative to the *generated file's own directory* (cmake_emitter.cpp's
+# rebasePath). That's a no-op exactly when the generated file sits
+# directly in CMAKE_SOURCE_DIR (same directory fastsed.lm's own
+# "Source/..." pathspecs are already relative to), which is also the
+# one placement plain include() can use directly — include() evaluates
+# relative paths against the *including* file's directory, not the
+# included one's, so putting the generated file in a subdirectory (and
+# add_subdirectory()-ing it instead) would also move gtest_discover_tests
+# and set_target_properties below into a different directory scope than
+# the targets it needs to reach. Kept out of the repo root proper and
+# out of git via .gitignore, since it's build output, not source.
+set(LOGICMAKE_GENERATED "${CMAKE_SOURCE_DIR}/GeneratedTargets.cmake")
+message(STATUS "Generating ${LOGICMAKE_GENERATED} from fastsed.lm ...")
+execute_process(
+    COMMAND "${LOGICMAKE_DRIVER}"
+            --schema "${LOGICMAKE_ROOT}/prolog/targets.pl"
+            --input  "${CMAKE_SOURCE_DIR}/fastsed.lm"
+            --output "${LOGICMAKE_GENERATED}"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE _logicmake_generate_rc
+)
+if(NOT _logicmake_generate_rc EQUAL 0)
+    message(FATAL_ERROR "CppLogicMake failed to generate ${LOGICMAKE_GENERATED} from fastsed.lm")
+endif()
+
+# ── GoogleTest ────────────────────────────────────────────────
+# cmake/Generated.cmake unconditionally defines fastsed_tests linking
+# against GTest::gtest_main / GTest::gmock (CppLogicMake's schema has
+# no notion of an optional target — see external/CppLogiMake's README,
+# "Non-goals"), so those imported targets must already exist by the
+# time include() below runs, whether or not BUILD_TESTS is on. When
+# it's off, fastsed_tests is still configured but built by nobody
+# (EXCLUDE_FROM_ALL below) — no point spending a real GoogleTest build
+# on a target that will never run, so it gets a do-nothing stand-in.
 if(BUILD_TESTS)
-    enable_testing()
-
     set(INSTALL_GTEST          OFF CACHE BOOL "" FORCE)
     set(BUILD_GMOCK            ON  CACHE BOOL "" FORCE)
     set(gtest_force_shared_crt ON  CACHE BOOL "" FORCE)
@@ -83,24 +121,25 @@ if(BUILD_TESTS)
         message(FATAL_ERROR "GoogleTest not found at ${DIR_GTEST}")
     endif()
     add_subdirectory("${DIR_GTEST}" "${CMAKE_BINARY_DIR}/Ext/googletest" EXCLUDE_FROM_ALL)
+else()
+    add_library(_fastsed_no_gtest INTERFACE)
+    add_library(GTest::gtest_main ALIAS _fastsed_no_gtest)
+    add_library(GTest::gmock      ALIAS _fastsed_no_gtest)
+endif()
 
-    add_executable(fastsed_tests
-        ${DIR_TEST_SRC}/TestReplacement.cpp
-        ${DIR_TEST_SRC}/TestParser.cpp
-        ${DIR_TEST_SRC}/TestLinker.cpp
-        ${DIR_TEST_SRC}/TestEngineHelpers.cpp
-        ${DIR_TEST_SRC}/TestIntegration.cpp
-        ${DIR_TEST_SRC}/TestIntegrationGenerated.cpp
-    )
-    target_include_directories(fastsed_tests PRIVATE
-        ${DIR_TEST_INC}   # TestHelper.hpp
-        ${DIR_INC}        # fastsed/*.hpp
-    )
-    target_link_libraries(fastsed_tests PRIVATE
-        fastsed_core
-        GTest::gtest_main
-        GTest::gmock
-    )
+# Defines: fastsed_gtest (INTERFACE stand-in), fastsed_core, fastsed,
+# fastsed_tests. No third-party dependency targets remain — fastsed
+# has none since Boost was removed.
+include("${LOGICMAKE_GENERATED}")
+
+set_target_properties(fastsed PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${DIR_BIN}
+)
+
+# ── Tests  →  <build>/Tests/fastsed_tests ───────────────────────
+if(BUILD_TESTS)
+    enable_testing()
+
     set_target_properties(fastsed_tests PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${DIR_BIN_TEST}
     )
@@ -110,6 +149,8 @@ if(BUILD_TESTS)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         TEST_PREFIX       "fastsed."
     )
+else()
+    set_target_properties(fastsed_tests PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()
 
 # ── Install ───────────────────────────────────────────────────
@@ -123,7 +164,6 @@ install(FILES ${CMAKE_SOURCE_DIR}/Man/fsed.1
 
 # ── Summary ───────────────────────────────────────────────────
 message(STATUS "  Build type : ${CMAKE_BUILD_TYPE}")
-message(STATUS "  Boost      : ${Boost_VERSION}")
 message(STATUS "  Tests      : ${BUILD_TESTS}")
 message(STATUS "  → ${CMAKE_BINARY_DIR}/fastsed")
 message(STATUS "  → ${CMAKE_BINARY_DIR}/Tests/fastsed_tests")

@@ -1,0 +1,3 @@
+[submodule "external/CppLogiMake"]
+	path = external/CppLogiMake
+	url = https://github.com/cschladetsch/CppLogiMake.git

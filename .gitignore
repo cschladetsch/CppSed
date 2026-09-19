@@ -1,2 +1,4 @@
+/Bin
 /Bin/Ext/
 .fastsed-build/
+/GeneratedTargets.cmake

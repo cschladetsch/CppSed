@@ -1,0 +1,62 @@
+% =====================================================================
+% fastsed.lm — CppSed build graph description for CppLogicMake.
+%
+% Run from the CppSed repo root (source pathspecs are resolved with
+% `git ls-files`, which needs to run inside this repo):
+%
+%   external/CppLogiMake/build/logicmake \
+%       --schema external/CppLogiMake/prolog/targets.pl \
+%       --input  fastsed.lm \
+%       --output cmake/Generated.cmake
+%
+% GoogleTest is not vendored into this workspace, so it's modelled as
+% a sourceless `lib` target (see external/CppLogiMake's README,
+% "Example" section, on why that resolves to INTERFACE rather than a
+% broken add_library with no sources) whose only job is to carry the
+% real GTest::* imported target names through link/2. The
+% CMakeLists.txt that includes GeneratedTargets.cmake still has to run
+% add_subdirectory(<googletest checkout>) itself first, since
+% find_package/add_subdirectory interop is an explicit non-goal of
+% CppLogicMake's schema (see its README, "Non-goals"). fastsed has no
+% third-party library dependencies otherwise — Boost was removed in
+% favour of std::filesystem, a small mmap wrapper (MappedFile.hpp),
+% popen/_popen, and a hand-rolled CLI parser.
+% =====================================================================
+
+platform(linux).
+
+% --- GoogleTest/GoogleMock, provided by add_subdirectory(googletest) ---
+target(fastsed_gtest, lib).
+link(fastsed_gtest, "GTest::gtest_main").
+link(fastsed_gtest, "GTest::gmock").
+
+% --- fastsed_core: all production code except Main.cpp ---
+target(fastsed_core, lib).
+sources(fastsed_core, "Source/Common.cpp").
+sources(fastsed_core, "Source/Regex.cpp").
+sources(fastsed_core, "Source/Replacement.cpp").
+sources(fastsed_core, "Source/Parser.cpp").
+sources(fastsed_core, "Source/Linker.cpp").
+sources(fastsed_core, "Source/EngineHelpers.cpp").
+sources(fastsed_core, "Source/Engine.cpp").
+sources(fastsed_core, "Source/LineSource.cpp").
+sources(fastsed_core, "Source/Options.cpp").
+include(fastsed_core, "Include/").
+
+% --- fastsed: the main executable → <build>/fastsed ---
+target(fastsed, exe).
+sources(fastsed, "Source/Main.cpp").
+depends(fastsed, fastsed_core, private).
+
+% --- fastsed_tests: GoogleTest suite → <build>/Tests/fastsed_tests ---
+target(fastsed_tests, exe).
+sources(fastsed_tests, "Test/Source/TestReplacement.cpp").
+sources(fastsed_tests, "Test/Source/TestParser.cpp").
+sources(fastsed_tests, "Test/Source/TestLinker.cpp").
+sources(fastsed_tests, "Test/Source/TestEngineHelpers.cpp").
+sources(fastsed_tests, "Test/Source/TestIntegration.cpp").
+sources(fastsed_tests, "Test/Source/TestIntegrationGenerated.cpp").
+include(fastsed_tests, "Test/Include/").
+include(fastsed_tests, "Include/").
+depends(fastsed_tests, fastsed_core, private).
+depends(fastsed_tests, fastsed_gtest, private).

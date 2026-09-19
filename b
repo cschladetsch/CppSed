@@ -32,7 +32,21 @@ if [[ -z "${PREFIX:-}" ]]; then
         PREFIX="${HOME}/.local"
     fi
 fi
-GTEST_DIR="${GTEST_DIR:-$HOME/External/googletest}"
+# Default GTEST_DIR: prefer an existing $HOME/External/googletest
+# (old convention, still honoured if present), then the copy that
+# already comes along for free with the CppLogiMake submodule
+# (external/CppLogiMake/external/googletest — no extra clone needed),
+# and only fall back to cloning a fresh one below if neither exists.
+if [[ -n "${GTEST_DIR:-}" ]]; then
+    : # explicit override wins
+elif [[ -f "$HOME/External/googletest/CMakeLists.txt" ]]; then
+    GTEST_DIR="$HOME/External/googletest"
+elif [[ -f "external/CppLogiMake/external/googletest/CMakeLists.txt" ]]; then
+    # Already cd'd to the repo root above, so this is relative to it.
+    GTEST_DIR="$(pwd)/external/CppLogiMake/external/googletest"
+else
+    GTEST_DIR="$HOME/External/googletest"
+fi
 
 choose_build_dir() {
     if [[ -n "${FASTSED_BUILD_DIR:-}" ]]; then
@@ -141,9 +155,7 @@ cmake -B "${BUILD_DIR}" \
     -DCMAKE_CXX_COMPILER="${CXX_BIN}" \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION="${IPO_FLAG}" \
     -DDIR_GTEST="${GTEST_DIR}" \
-    -DBUILD_TESTS=ON \
-    ${BOOST_ROOT:+-DBOOST_ROOT="${BOOST_ROOT}"} \
-    ${BOOST_LIBRARYDIR:+-DBOOST_LIBRARYDIR="${BOOST_LIBRARYDIR}"}
+    -DBUILD_TESTS=ON
 
 # ── Build ─────────────────────────────────────────────────────
 echo "[b] building with ${JOBS} jobs..."

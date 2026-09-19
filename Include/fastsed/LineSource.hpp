@@ -2,18 +2,16 @@
 // ============================================================
 //  LineSource.hpp  —  unified line reader
 //
-//  Regular files are memory-mapped via Boost.Iostreams
-//  mapped_file_source for zero-copy sequential access.
-//  stdin / pipes fall back to fgetc-based streaming.
-//  One-line lookahead provides accurate last_line detection
-//  without reading the entire file up front.
+//  Regular files are memory-mapped via fastsed::MappedFile for
+//  zero-copy sequential access. stdin / pipes fall back to
+//  fgetc-based streaming. One-line lookahead provides accurate
+//  last_line detection without reading the entire file up front.
 // ============================================================
 
 #include "Common.hpp"
-#include <boost/iostreams/device/mapped_file.hpp>
+#include "MappedFile.hpp"
 
 namespace fastsed {
-namespace bio = boost::iostreams;
 
 class LineSource {
 public:
@@ -39,7 +37,7 @@ private:
     string fname;
     bool is_pipe = false;
     // mmap-backed
-    bio::mapped_file_source mf;
+    MappedFile mf;
     const char *cur = nullptr;
     const char *end = nullptr;
   };

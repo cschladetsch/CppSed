@@ -16,10 +16,10 @@ against the system `sed`.
 ## Usage
 
 ```bash
-./Benchmark/run.sh
-./Benchmark/run.sh --runs 10 --warmup 3
-./Benchmark/run.sh --no-build
-./Benchmark/run.sh --csv-out /tmp/results.csv --png-out /tmp/results.png
+./Benchmark/run.ps1
+./Benchmark/run.ps1 -Runs 10 -Warmup 3
+./Benchmark/run.ps1 -NoBuild
+./Benchmark/run.ps1 -CsvOut /tmp/results.csv -PngOut /tmp/results.png
 ```
 
 ## Benchmark cases
