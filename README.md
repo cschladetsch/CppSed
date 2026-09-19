@@ -5,6 +5,8 @@
 
 A high-performance, feature-complete clone of `sed(1)` written in modern C++23. It implements the full POSIX stream editor command set along with high-value GNU sed extensions (such as in-place editing, case conversion, and sandbox mode).
 
+**[Try the live in-browser playground](https://claude.ai/artifact/Hi6TBdM99Nkk3GyVVLzTos)** — edit a script and input, see the transformed output instantly (JS reimplementation of the sed dialect, for demo purposes; not the compiled binary).
+
 ---
 
 ## Core Philosophy

@@ -34,7 +34,69 @@ void print_usage() {
   std::println(stdout, "  -z, --null-data            NUL-delimited lines");
   std::println(stdout, "  -i[SUFFIX], --inplace[=SUFFIX]  edit files in place");
   std::println(stdout, "  --sandbox                  disable e/r/w commands");
-  std::println(stdout, "  --help                     show this help");
+  std::println(stdout, "  --help, -?                 show this help");
+  std::println(stdout, "  --example                  show usage examples");
+}
+
+void print_examples() {
+  std::println(stdout, "Examples:");
+  std::println(stdout, "");
+  std::println(stdout, "  # Standard substitution (replaces first occurrence on line)");
+  std::println(stdout, "  echo 'alpha beta' | fsed 's/beta/gamma/'");
+  std::println(stdout, "");
+  std::println(stdout, "  # Global replacement with case insensitivity (GNU extension)");
+  std::println(stdout, "  echo 'Alpha alpha' | fsed 's/alpha/beta/gi'");
+  std::println(stdout, "");
+  std::println(stdout, "  # Print ONLY matching lines (-n suppresses automatic printing)");
+  std::println(stdout, "  fsed -n '/[Ee]rror/p' server.log");
+  std::println(stdout, "");
+  std::println(stdout, "  # Step addresses: apply to every 3rd line starting at line 2");
+  std::println(stdout, "  seq 10 | fsed -n '2~3p'");
+  std::println(stdout, "");
+  std::println(stdout, "  # In-place file editing with backup generation");
+  std::println(stdout, "  fsed -i.bak 's/localhost/db.internal/g' config.yaml");
+  std::println(stdout, "");
+  std::println(stdout, "  # Process lines delimited by NUL (\\0) instead of newline");
+  std::println(stdout, "  printf 'first\\0second\\0third\\0' | fsed -z 's/second/SECOND/'");
+  std::println(stdout, "");
+  std::println(stdout, "  # Case control in substitution: \\L...\\E lowercase, \\U...\\E uppercase");
+  std::println(stdout, "  echo 'HELLO world' | fsed -E 's/(HELLO) (world)/\\L\\1\\E \\U\\2\\E/'");
+  std::println(stdout, "");
+  std::println(stdout, "  # Sandbox mode: abort on shell/file-writing commands (e/r/R/w/W)");
+  std::println(stdout, "  fsed --sandbox -f script.sed input.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Delete lines matching a pattern (e.g. strip comments)");
+  std::println(stdout, "  fsed '/^#/d' config.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Delete a range of lines by number");
+  std::println(stdout, "  fsed '2,4d' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Print current line number before each line");
+  std::println(stdout, "  fsed '=' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Count lines, like 'wc -l' ($= is the last line's address)");
+  std::println(stdout, "  fsed -n '$=' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Transliterate characters (like 'tr'), here upper-casing a-z");
+  std::println(stdout, "  echo 'hello' | fsed 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'");
+  std::println(stdout, "");
+  std::println(stdout, "  # Insert a line before line 1");
+  std::println(stdout, "  fsed '1i\\Header line' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Append a line after the last line ($ = last line)");
+  std::println(stdout, "  fsed '$a\\Footer line' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Reverse a file's lines (like 'tac'), via the hold space");
+  std::println(stdout, "  fsed -n '1!G;h;$p' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Double-space a file by appending a blank line after each");
+  std::println(stdout, "  fsed 'G' file.txt");
+  std::println(stdout, "");
+  std::println(stdout, "  # Stop processing after the first match (like 'head -n' by pattern)");
+  std::println(stdout, "  fsed '/ERROR/q' server.log");
+  std::println(stdout, "");
+  std::println(stdout, "  # Chain multiple expressions with repeated -e");
+  std::println(stdout, "  fsed -e 's/foo/bar/' -e 's/baz/qux/' file.txt");
 }
 
 // Reads a whole file into a string; die()s on failure.
@@ -149,6 +211,9 @@ void parse_long_option(ParseState &st, string_view token, int argc,
   } else if (name == "help") {
     print_usage();
     std::exit(0);
+  } else if (name == "example" || name == "examples") {
+    print_examples();
+    std::exit(0);
   } else {
     die(std::format("unrecognised option '--{}'", name));
   }
@@ -171,6 +236,15 @@ Options parse_args(int argc, char **argv) {
     if (arg == "--") {
       no_more_options = true;
       continue;
+    }
+
+    if (arg == "-?") {
+      // Windows CLI convention (dir /?, robocopy /?, ...) — alias for
+      // --help rather than a clusterable short option, since '?' isn't
+      // a real sed flag and treating it as one would wrongly permit
+      // clusters like "-n?".
+      print_usage();
+      std::exit(0);
     }
 
     if (arg.size() >= 2 && arg[1] == '-') {
