@@ -160,9 +160,15 @@ else()
 endif()
 
 # ── Install ───────────────────────────────────────────────────
+# Windows resolves/executes a program by its .exe extension; installing
+# it as bare "fsed" (no extension) leaves Explorer/cmd/PowerShell
+# treating it as an unrecognized data file (a "pick an app to open
+# this" prompt) rather than running it, even though the file itself is
+# a valid PE executable. Keep the .exe suffix there; POSIX platforms
+# don't use extensions to mean anything so "fsed" there is unaffected.
 install(PROGRAMS $<TARGET_FILE:fastsed>
     DESTINATION bin
-    RENAME fsed
+    RENAME fsed${CMAKE_EXECUTABLE_SUFFIX}
 )
 install(FILES ${CMAKE_SOURCE_DIR}/Man/fsed.1
     DESTINATION share/man/man1
