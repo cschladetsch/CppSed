@@ -12,6 +12,12 @@ endif()
 
 option(BUILD_TESTS "Build GoogleTest suite" ON)
 
+# MSVC/clang-cl flag the whole POSIX-ish C stdio/string API (fopen,
+# strerror, ...) as "insecure" and wants the _s variants instead; those
+# aren't portable to POSIX systems, so silence the deprecation warnings
+# rather than fork the code per-platform for cosmetics.
+add_compile_definitions($<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>)
+
 # ── Compiler flags ────────────────────────────────────────────
 add_compile_options(
     $<$<CXX_COMPILER_ID:GNU,Clang>:-Wall>

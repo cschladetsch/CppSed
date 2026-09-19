@@ -6,7 +6,7 @@
 //               captures g_out output, and returns the result.
 //
 //  Approach:
-//    - Input  : written to mkstemp temp file, fed to LineSource
+//    - Input  : written to a temp file, fed to LineSource
 //    - Output : g_out.fd redirected to a pipe; drained after run
 //    - Cleanup: temp file unlinked; g_out.fd restored; globals reset
 // ============================================================
@@ -21,7 +21,16 @@
 #include <gtest/gtest.h>
 #include <stdexcept>
 #include <string>
+
+#if defined(_WIN32)
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <fcntl.h>
+#include <io.h>
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 
 namespace fastsed::test {
 
@@ -29,22 +38,43 @@ namespace fastsed::test {
 struct Pipe {
   int r = -1, w = -1;
   Pipe() {
+#if defined(_WIN32)
+    int fd[2];
+    // Binary mode: text-mode CRT pipes translate \n<->\r\n, which
+    // would corrupt captured output byte-for-byte comparisons.
+    if (_pipe(fd, 4096, _O_BINARY))
+      throw std::runtime_error("pipe");
+    r = fd[0];
+    w = fd[1];
+#else
     int fd[2];
     if (pipe(fd))
       throw std::runtime_error("pipe");
     r = fd[0];
     w = fd[1];
+#endif
   }
   ~Pipe() {
+#if defined(_WIN32)
+    if (r >= 0)
+      _close(r);
+    if (w >= 0)
+      _close(w);
+#else
     if (r >= 0)
       close(r);
     if (w >= 0)
       close(w);
+#endif
   }
 
   void close_write() {
     if (w >= 0) {
+#if defined(_WIN32)
+      _close(w);
+#else
       close(w);
+#endif
       w = -1;
     }
   }
@@ -53,29 +83,81 @@ struct Pipe {
     close_write();
     std::string out;
     char buf[4096];
+#if defined(_WIN32)
+    int n;
+    while ((n = _read(r, buf, sizeof buf)) > 0)
+      out.append(buf, static_cast<size_t>(n));
+#else
     ssize_t n;
     while ((n = read(r, buf, sizeof buf)) > 0)
       out.append(buf, static_cast<size_t>(n));
+#endif
     return out;
   }
 };
+
+namespace detail {
+
+// Creates a unique temp file, returns its path with the fd left open
+// (matching mkstemp()'s contract) via out_fd.
+inline std::string make_temp_file(int &out_fd) {
+#if defined(_WIN32)
+  char dir[MAX_PATH];
+  DWORD dlen = ::GetTempPathA(sizeof dir, dir);
+  if (dlen == 0 || dlen > sizeof dir)
+    throw std::runtime_error("GetTempPathA failed");
+  char path[MAX_PATH];
+  if (::GetTempFileNameA(dir, "fsd", 0, path) == 0)
+    throw std::runtime_error("GetTempFileNameA failed");
+  int fd = -1;
+  if (_sopen_s(&fd, path, _O_RDWR | _O_BINARY | _O_CREAT | _O_TRUNC,
+               _SH_DENYNO, _S_IREAD | _S_IWRITE) != 0 ||
+      fd < 0)
+    throw std::runtime_error("_sopen_s failed");
+  out_fd = fd;
+  return std::string(path);
+#else
+  char tmppath[] = "/tmp/fastsed_test_XXXXXX";
+  int fd = mkstemp(tmppath);
+  if (fd < 0)
+    throw std::runtime_error("mkstemp failed");
+  out_fd = fd;
+  return std::string(tmppath);
+#endif
+}
+
+} // namespace detail
 
 // ── Core helper ───────────────────────────────────────────────
 inline std::string run_sed(const std::string &script, const std::string &input,
                            bool suppress = false, bool extended = false,
                            bool null_delim = false) {
   // Write input to a temporary file so LineSource can mmap it
-  char tmppath[] = "/tmp/fastsed_test_XXXXXX";
-  int tmpfd = mkstemp(tmppath);
-  if (tmpfd < 0)
-    throw std::runtime_error("mkstemp failed");
-  if (!input.empty())
+  int tmpfd = -1;
+  std::string tmppath = detail::make_temp_file(tmpfd);
+
+  if (!input.empty()) {
+#if defined(_WIN32)
+    (void)_write(tmpfd, input.data(), static_cast<unsigned int>(input.size()));
+#else
     (void)write(tmpfd, input.data(), input.size());
+#endif
+  }
+#if defined(_WIN32)
+  _close(tmpfd);
+#else
   close(tmpfd);
+#endif
 
   struct Cleanup {
-    const char *p;
-    ~Cleanup() { unlink(p); }
+    std::string p;
+    ~Cleanup() {
+#if defined(_WIN32)
+      _unlink(p.c_str());
+#else
+      unlink(p.c_str());
+#endif
+    }
   } cleanup{tmppath};
 
   // Redirect g_out to capture pipe

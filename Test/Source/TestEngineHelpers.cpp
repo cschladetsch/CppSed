@@ -6,7 +6,15 @@
 #include "fastsed/Engine.hpp"
 #include "fastsed/OutBuf.hpp"
 #include <gtest/gtest.h>
+
+#if defined(_WIN32)
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <fcntl.h>
+#include <io.h>
+#else
 #include <unistd.h>
+#endif
 
 using namespace fastsed;
 
@@ -45,18 +53,33 @@ TEST(DoTrans, ByteRangeStable) {
 // Capture do_list output via pipe
 static std::string list_output(const std::string &ps, long width = 70) {
   int pipefd[2];
+#if defined(_WIN32)
+  _pipe(pipefd, 4096, _O_BINARY);
+#else
   pipe(pipefd);
+#endif
   OutBuf tmp(pipefd[1]);
   do_list(ps, width, tmp);
   tmp.flush();
+#if defined(_WIN32)
+  _close(pipefd[1]);
+#else
   close(pipefd[1]);
+#endif
 
   std::string out;
   char buf[4096];
+#if defined(_WIN32)
+  int n;
+  while ((n = _read(pipefd[0], buf, sizeof buf)) > 0)
+    out.append(buf, static_cast<size_t>(n));
+  _close(pipefd[0]);
+#else
   ssize_t n;
   while ((n = read(pipefd[0], buf, sizeof buf)) > 0)
     out.append(buf, static_cast<size_t>(n));
   close(pipefd[0]);
+#endif
   return out;
 }
 
