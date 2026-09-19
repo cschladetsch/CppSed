@@ -1,2 +1,0 @@
-/usr/local/bin/fsed
-/usr/local/share/man/man1/fsed.1
