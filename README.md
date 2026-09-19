@@ -7,7 +7,7 @@ A high-performance, feature-complete clone of `sed(1)` written in modern C++23. 
 
 ---
 
-## 🎯 Core Philosophy
+## Core Philosophy
 
 `fastsed` was built with three strict principles:
 1. **Keep it Correct**: Full POSIX standard compliance, thoroughly validated with a comprehensive integration test suite.
@@ -16,7 +16,7 @@ A high-performance, feature-complete clone of `sed(1)` written in modern C++23. 
 
 ---
 
-## 🏛️ Architecture & Execution Pipeline
+## Architecture & Execution Pipeline
 
 Unlike traditional interpreter-based stream editors, `fastsed` parses scripts into a high-level AST, which a linker then flattens into a jump-optimized instruction list (Flat IR) before executing. This avoids deep recursion and yields $O(1)$ jumps for labels, block entry/exit (`{...}`), and conditional branches (`t`, `T`, `b`).
 
@@ -45,7 +45,7 @@ graph TD
 
 ---
 
-## 🛠️ Build and Installation
+## Build and Installation
 
 ### Prerequisites
 - **Compiler**: A C++23 compliant compiler (e.g., GCC 13+, Clang 16+, or MSVC 2022).
@@ -94,7 +94,7 @@ cmake --build Bin --config Release
 
 ---
 
-## 📖 Command Reference & Examples
+## Command Reference & Examples
 
 ### Basic Substitutions & Prints
 ```bash
@@ -130,7 +130,7 @@ echo 'HELLO world' | ./Bin/fastsed -E 's/(HELLO) (world)/\L\1\E \U\2\E/'
 # Output: hello WORLD
 ```
 
-### 🔒 Sandbox Mode
+### Sandbox Mode
 For security-conscious environments, you can disable commands that interface with the shell or the filesystem (such as `e`, `r`, `R`, `w`, and `W`):
 
 ```bash
@@ -140,7 +140,7 @@ For security-conscious environments, you can disable commands that interface wit
 
 ---
 
-## 📊 Benchmarks
+## Benchmarks
 
 The benchmark suite compares `fastsed` execution times directly against native `/usr/bin/sed`. Results are stored under `Benchmark/Results/`.
 
@@ -151,7 +151,7 @@ To run the benchmarking suite locally:
 
 ---
 
-## 🧪 Testing Suite
+## Testing Suite
 
 `fastsed` features robust test coverage consisting of **348 test cases** organized across six specific suites to prevent regressions:
 

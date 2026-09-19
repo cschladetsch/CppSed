@@ -21,6 +21,7 @@ namespace {
 constexpr char kBareInplace = '\x01';
 
 void print_usage() {
+  std::println(stdout, "fastsed (built {} {})", __DATE__, __TIME__);
   std::println(stdout, "Usage: sed [OPTION]... SCRIPT [FILE]...");
   std::println(stdout, "       sed [OPTION]... -e SCRIPT... [FILE]...");
   std::println(stdout, "       sed [OPTION]... -f SCRIPTFILE... [FILE]...");
