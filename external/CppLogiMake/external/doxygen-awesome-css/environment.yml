@@ -1,7 +1,0 @@
----
-name: RTD
-channels:
-  - conda-forge
-dependencies:
-  - doxygen=1.18.0
-  - graphviz=14.1.2
